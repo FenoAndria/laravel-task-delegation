@@ -1,12 +1,12 @@
 <template>
   <UserLayout>
     <div>
-      <div v-if="loadingTeams">
+      <div v-if="loadingMemberTeams">
         <Loading />
       </div>
       <div v-else>
-        <div class="flex flex-wrap -mx-1" v-if="teams.length">
-          <div class="w-1/3 px-1" v-for="item in teams">
+        <div class="flex flex-wrap -mx-1" v-if="memberTeams.length">
+          <div class="w-1/3 px-1" v-for="item in memberTeams">
             <div class="list-content">
               <p class="uppercase font-semibold text-primary text-lg">
                 {{ item.team.name }}
@@ -39,21 +39,21 @@ import { computed, onMounted } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import UserLayout from "../../../Components/Layouts/UserLayout.vue";
 import Loading from "../../../Components/Layouts/Loading.vue";
-import { getTeams } from "../../../Services/Member/MemberTeamService";
+import { getMemberTeams } from "../../../Services/Member/MemberTeamService";
 import dayjs from "dayjs";
 export default {
   components: { UserLayout, Loading },
   setup(props) {
     const store = useStore();
-    const teams = computed(() => store.getters.teams);
-    const loadingTeams = computed(() => store.getters.loadingTeams);
+    const memberTeams = computed(() => store.getters.memberTeams);
+    const loadingMemberTeams = computed(() => store.getters.loadingMemberTeams);
 
     onMounted(async () => {
-      await getTeams();
+      await getMemberTeams();
     });
     return {
-      teams,
-      loadingTeams,
+      memberTeams,
+      loadingMemberTeams,
       dayjs,
     };
   },
