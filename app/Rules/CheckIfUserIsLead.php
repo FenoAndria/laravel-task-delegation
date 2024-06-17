@@ -17,7 +17,7 @@ class CheckIfUserIsLead implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($this->isLead($value)) {
-            $fail('User is a lead!');
+            $fail('User selected is a lead!');
         }
     }
 }
