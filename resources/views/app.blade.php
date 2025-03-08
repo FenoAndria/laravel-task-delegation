@@ -3,12 +3,17 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Application</title>
-        <link rel="stylesheet" href="./../../../assets/bootstrap-icons/bootstrap-icons.css">
-        @vite('resources/css/app.css')
+
+        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+
+        @routes
+        @vite(['resources/js/app.ts'])
+        @inertiaHead
     </head>
-    <body>
-        <div id="app"></div>
-        @vite('resources/js/app.js')
+    <body class="font-sans antialiased">
+        @inertia
     </body>
 </html>
