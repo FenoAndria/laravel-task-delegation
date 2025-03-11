@@ -1,37 +1,45 @@
-# **Team flow Application**
+# Delego
 
-This application is designed for task management assigned to teams.
+**Assisted delegation for teams.** Missions flow down from the organization to team leads and members; progress flows back up.
 
-## Prerequisites
-- PHP >= 8.1
-- Composer
-- Node.js
-- NPM or Yarn
-- MySQL or any other database supported by Laravel
+Delego is the rewrite of *Team Flow* (2024, kept under the [`v1-2024`](../../tree/v1-2024) tag).
 
-## Installation
-1. Clone the repository :
-git clone https://github.com/FenoAndria/team-flow.git
-cd team-flow
+> Work in progress — the rewrite is being built feature by feature. Progress reports live in [`docs/cr`](docs/cr).
 
-2. Install PHP dependencies :
+## Stack
+
+- **Backend**: PHP 8.3+, Laravel 12
+- **Frontend**: Inertia 2, Vue 3, TypeScript, Tailwind CSS, shadcn-vue
+- **Quality**: Pest, Larastan, Pint, ESLint, Prettier, GitHub Actions
+
+## Getting started
+
+```bash
+git clone https://github.com/FenoAndria/team-flow.git delego
+cd delego
+
 composer install
+npm install
 
-3. Create '.env' file by copying '.env.example' and configure your environment variables :
 cp .env.example .env
 php artisan key:generate
-
-4. Configure your database in the '.env' file and migrate the tables :
 php artisan migrate
-php artisan db:seed
 
-5. Install Node.js dependencies :
-npm install or yarn install
+composer run dev
+```
 
-6. Start the development server :
-php artisan serve (Laravel)
-npm run dev (Vue.js)
+The app is served at `http://localhost:8000`.
 
-## Usage
-Access the application via `http://localhost:8000`
+## Quality
 
+```bash
+composer test      # Pest test suite
+composer analyse   # Larastan static analysis
+composer lint      # Pint code style
+npm run lint:check # ESLint
+npm run format:check
+```
+
+## License
+
+MIT
