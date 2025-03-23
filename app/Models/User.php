@@ -3,8 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\OrganizationRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -45,5 +48,43 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * @return BelongsToMany<Organization, $this, Membership, 'membership'>
+     */
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class)
+            ->using(Membership::class)
+            ->as('membership')
+            ->withPivot('id', 'role')
+            ->withTimestamps();
+    }
+
+    /**
+     * @return BelongsTo<Organization, $this>
+     */
+    public function currentOrganization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'current_organization_id');
+    }
+
+    public function belongsToOrganization(Organization $organization): bool
+    {
+        return $this->organizations()->whereKey($organization->id)->exists();
+    }
+
+    public function roleIn(Organization $organization): ?OrganizationRole
+    {
+        $membership = $this->organizations()->whereKey($organization->id)->first()?->membership;
+
+        return $membership?->role;
+    }
+
+    public function switchOrganization(Organization $organization): void
+    {
+        $this->forceFill(['current_organization_id' => $organization->id])->save();
+        $this->setRelation('currentOrganization', $organization);
     }
 }

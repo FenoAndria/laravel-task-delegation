@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Settings\MemberController;
+use App\Http\Controllers\Settings\OrganizationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +20,13 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/appearance', function () {
         return Inertia::render('settings/Appearance');
     })->name('appearance');
+});
+
+Route::middleware(['auth', 'verified', 'organization'])->group(function () {
+    Route::get('settings/organization', [OrganizationController::class, 'edit'])->name('organization.edit');
+    Route::patch('settings/organization', [OrganizationController::class, 'update'])->name('organization.update');
+
+    Route::get('settings/members', [MemberController::class, 'index'])->name('members.index');
+    Route::patch('settings/members/{member}', [MemberController::class, 'update'])->name('members.update');
+    Route::delete('settings/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
 });

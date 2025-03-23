@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Organization;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -44,7 +45,33 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                'organization' => fn () => $this->currentOrganization($request),
+                'organizations' => fn () => $request->user()?->organizations()->orderBy('name')->get(['organizations.id', 'name'])
+                    ->map(fn (Organization $organization) => $organization->only('id', 'name')),
             ],
         ]);
+    }
+
+    /**
+     * @return array{id: int, name: string, slug: string, role: string|null, can_manage: bool}|null
+     */
+    private function currentOrganization(Request $request): ?array
+    {
+        $user = $request->user();
+        $organization = $user?->currentOrganization;
+
+        if ($user === null || $organization === null) {
+            return null;
+        }
+
+        $role = $user->roleIn($organization);
+
+        return [
+            'id' => $organization->id,
+            'name' => $organization->name,
+            'slug' => $organization->slug,
+            'role' => $role?->value,
+            'can_manage' => (bool) $role?->canManage(),
+        ];
     }
 }

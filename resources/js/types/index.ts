@@ -1,7 +1,24 @@
 import type { LucideIcon } from 'lucide-vue-next';
 
+export type OrganizationRole = 'owner' | 'admin' | 'member';
+
+export interface CurrentOrganization {
+    id: number;
+    name: string;
+    slug: string;
+    role: OrganizationRole | null;
+    can_manage: boolean;
+}
+
+export interface OrganizationSummary {
+    id: number;
+    name: string;
+}
+
 export interface Auth {
     user: User;
+    organization: CurrentOrganization | null;
+    organizations: OrganizationSummary[];
 }
 
 export interface BreadcrumbItem {
