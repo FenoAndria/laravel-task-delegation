@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Settings;
 
 use App\Actions\Organizations\ChangeMemberRole;
 use App\Actions\Organizations\RemoveMember;
+use App\Enums\InvitationStatus;
 use App\Enums\OrganizationRole;
 use App\Http\Controllers\Controller;
+use App\Models\Invitation;
 use App\Models\Membership;
 use App\Models\Organization;
 use App\Models\User;
@@ -41,6 +43,17 @@ class MemberController extends Controller
                 'value' => $role->value,
                 'label' => $role->label(),
             ]),
+            'invitations' => $organization->invitations()
+                ->where('status', InvitationStatus::Pending)
+                ->latest()
+                ->get()
+                ->map(fn (Invitation $invitation) => [
+                    'id' => $invitation->id,
+                    'email' => $invitation->email,
+                    'role' => $invitation->role->value,
+                    'expired' => $invitation->isExpired(),
+                    'expires_at' => $invitation->expires_at->toDateString(),
+                ]),
             'canManage' => $this->user($request)->can('manageMembers', $organization),
         ]);
     }
