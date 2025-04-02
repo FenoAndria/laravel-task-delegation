@@ -19,9 +19,11 @@ class RegisteredUserController extends Controller
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('auth/Register');
+        return Inertia::render('auth/Register', [
+            'email' => $request->string('email')->toString(),
+        ]);
     }
 
     /**
@@ -47,6 +49,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return to_route('dashboard');
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 }

@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
     hasOrganizations: boolean;
+    invitations: { token: string; organization: string; role: string }[];
 }>();
 
 const form = useForm({
@@ -24,6 +25,20 @@ const submit = () => {
 <template>
     <AuthBase title="Create your organization" description="An organization groups your teams, their missions and the people working on them.">
         <Head title="Create an organization" />
+
+        <div v-if="invitations.length" class="mb-6 flex flex-col gap-2">
+            <p class="text-sm font-medium">You have been invited</p>
+            <Link
+                v-for="invitation in invitations"
+                :key="invitation.token"
+                :href="route('invitations.show', invitation.token)"
+                class="flex items-center justify-between rounded-md border px-4 py-3 text-sm hover:bg-accent"
+            >
+                <span class="font-medium">{{ invitation.organization }}</span>
+                <span class="text-muted-foreground">as {{ invitation.role }}</span>
+            </Link>
+            <p class="mt-2 text-center text-xs uppercase tracking-wide text-muted-foreground">or start your own</p>
+        </div>
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-2">
