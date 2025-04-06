@@ -8,9 +8,13 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
+const props = defineProps<{
+    email?: string;
+}>();
+
 const form = useForm({
     name: '',
-    email: '',
+    email: props.email ?? '',
     password: '',
     password_confirmation: '',
 });

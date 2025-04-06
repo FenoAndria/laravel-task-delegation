@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\InvitationController;
 use App\Http\Controllers\Settings\MemberController;
 use App\Http\Controllers\Settings\OrganizationController;
 use App\Http\Controllers\Settings\PasswordController;
@@ -29,4 +30,8 @@ Route::middleware(['auth', 'verified', 'organization'])->group(function () {
     Route::get('settings/members', [MemberController::class, 'index'])->name('members.index');
     Route::patch('settings/members/{member}', [MemberController::class, 'update'])->name('members.update');
     Route::delete('settings/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+
+    Route::post('settings/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+    Route::post('settings/invitations/{invitation}/resend', [InvitationController::class, 'resend'])->name('invitations.resend');
+    Route::delete('settings/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
 });
