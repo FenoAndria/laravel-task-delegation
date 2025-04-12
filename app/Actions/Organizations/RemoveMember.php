@@ -33,6 +33,9 @@ class RemoveMember
             }
 
             $organization->members()->detach($member->id);
+            $teamIds = $organization->teams()->pluck('id');
+            $member->teams()->detach($teamIds);
+            $organization->teams()->where('lead_id', $member->id)->update(['lead_id' => null]);
 
             if ($member->current_organization_id === $organization->id) {
                 $member->forceFill(['current_organization_id' => $member->organizations()->value('organizations.id')])->save();
