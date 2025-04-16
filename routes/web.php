@@ -3,6 +3,8 @@
 use App\Http\Controllers\CurrentOrganizationController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamMemberController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +26,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', function () {
             return Inertia::render('Dashboard');
         })->name('dashboard');
+
+        Route::resource('teams', TeamController::class)->except(['create', 'edit']);
+        Route::post('teams/{team}/members', [TeamMemberController::class, 'store'])->name('teams.members.store');
+        Route::delete('teams/{team}/members/{member}', [TeamMemberController::class, 'destroy'])->name('teams.members.destroy');
+        Route::put('teams/{team}/lead', [TeamMemberController::class, 'updateLead'])->name('teams.lead.update');
     });
 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -28,5 +29,13 @@ abstract class Controller
         abort_if($organization === null, 409);
 
         return $organization;
+    }
+
+    /**
+     * Resources of other organizations behave as if they did not exist.
+     */
+    protected function ensureInOrganization(Request $request, Model $model): void
+    {
+        abort_unless($model->getAttribute('organization_id') === $this->organization($request)->id, 404);
     }
 }
