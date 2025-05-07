@@ -4,13 +4,18 @@ import NavUser from '@/components/NavUser.vue';
 import OrganizationSwitcher from '@/components/OrganizationSwitcher.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
-import { LayoutGrid, Users } from 'lucide-vue-next';
+import { Flag, LayoutGrid, Users } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Missions',
+        href: '/missions',
+        icon: Flag,
     },
     {
         title: 'Teams',
