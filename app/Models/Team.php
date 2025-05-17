@@ -63,6 +63,14 @@ class Team extends Model
         return $this->lead_id === $user->id;
     }
 
+    /**
+     * Whether the person can be assigned work in this team: its lead or one of its members.
+     */
+    public function includes(User $user): bool
+    {
+        return $this->isLedBy($user) || $this->hasMember($user);
+    }
+
     public function hasMember(User $user): bool
     {
         return $this->members()->whereKey($user->id)->exists();
