@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Missions\CompleteMission;
 use App\Enums\MissionStatus;
 use App\Enums\Priority;
+use App\Enums\TaskStatus;
+use App\Http\Presenters\TaskPresenter;
 use App\Models\Mission;
 use App\Models\Organization;
+use App\Models\Task;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -25,6 +30,10 @@ class MissionController extends Controller
 
         $missions = $organization->missions()
             ->with('team:id,name')
+            ->withCount([
+                'tasks as tasks_total' => fn ($query) => $query->where('status', '!=', TaskStatus::Cancelled),
+                'tasks as tasks_done' => fn ($query) => $query->where('status', TaskStatus::Done),
+            ])
             ->when($teamId, fn ($query) => $query->where('team_id', $teamId))
             ->when($filter === 'active', fn ($query) => $query->whereIn('status', [MissionStatus::Open, MissionStatus::InProgress]))
             ->when($filter === 'completed', fn ($query) => $query->where('status', MissionStatus::Completed))
@@ -62,8 +71,12 @@ class MissionController extends Controller
     public function show(Request $request, Mission $mission): Response
     {
         $this->ensureInOrganization($request, $mission);
-        $mission->load('team:id,name,lead_id', 'team.lead:id,name', 'creator:id,name');
+        $mission->load('team:id,name,lead_id', 'team.lead:id,name', 'team.members:id,name', 'creator:id,name', 'tasks.assignee:id,name');
+        $mission->tasks->each->setRelation('mission', $mission);
+        $mission->setAttribute('tasks_total', $mission->tasks->where('status', '!=', TaskStatus::Cancelled)->count());
+        $mission->setAttribute('tasks_done', $mission->tasks->where('status', TaskStatus::Done)->count());
         $user = $this->user($request);
+        $team = $mission->team;
 
         return Inertia::render('missions/Show', [
             'mission' => [
@@ -75,11 +88,16 @@ class MissionController extends Controller
                 'created_at' => $mission->created_at?->toDateString(),
                 'completed_at' => $mission->completed_at?->toDateString(),
             ],
+            'tasks' => $mission->tasks->map(fn (Task $task) => TaskPresenter::present($task, $user)),
+            'assignees' => collect([$team->lead])->filter()->merge($team->members)->unique('id')
+                ->map(fn (User $person) => $person->only('id', 'name'))->values(),
             'teams' => $mission->organization->teams()->orderBy('name')->get(['id', 'name']),
             'priorities' => $this->options(Priority::cases()),
             'can' => [
                 'update' => $user->can('update', $mission),
                 'delete' => $user->can('delete', $mission),
+                'complete' => $user->can('complete', $mission) && CompleteMission::canComplete($mission),
+                'manageTasks' => $user->can('manage', [Task::class, $mission]),
             ],
         ]);
     }
@@ -132,6 +150,10 @@ class MissionController extends Controller
             'priority' => $mission->priority->value,
             'due_date' => $mission->due_date?->toDateString(),
             'overdue' => $mission->isOverdue(),
+            'progress' => [
+                'done' => (int) $mission->getAttribute('tasks_done'),
+                'total' => (int) $mission->getAttribute('tasks_total'),
+            ],
         ];
     }
 

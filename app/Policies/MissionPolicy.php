@@ -30,4 +30,12 @@ class MissionPolicy
     {
         return $this->create($user, $mission->organization);
     }
+
+    /**
+     * The team lead closes the mission they delivered; managers may too.
+     */
+    public function complete(User $user, Mission $mission): bool
+    {
+        return $mission->team->isLedBy($user) || $this->create($user, $mission->organization);
+    }
 }
