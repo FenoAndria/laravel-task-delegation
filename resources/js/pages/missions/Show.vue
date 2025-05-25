@@ -6,7 +6,9 @@ import InputError from '@/components/InputError.vue';
 import MissionFields, { type MissionFormData } from '@/components/missions/MissionFields.vue';
 import PriorityLabel from '@/components/missions/PriorityLabel.vue';
 import StatusBadge from '@/components/missions/StatusBadge.vue';
+import TaskRow, { type TaskItem } from '@/components/tasks/TaskRow.vue';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 
@@ -26,10 +28,13 @@ const props = defineProps<{
         overdue: boolean;
         created_at: string | null;
         completed_at: string | null;
+        progress: { done: number; total: number };
     };
+    tasks: TaskItem[];
+    assignees: { id: number; name: string }[];
     teams: { id: number; name: string }[];
     priorities: { value: string; label: string }[];
-    can: { update: boolean; delete: boolean };
+    can: { update: boolean; delete: boolean; complete: boolean; manageTasks: boolean };
 }>();
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
@@ -38,7 +43,8 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
 ]);
 
 const page = usePage();
-const statusError = computed(() => (page.props.errors as Record<string, string>).status);
+const errors = computed(() => page.props.errors as Record<string, string>);
+const progress = computed(() => (props.mission.progress.total ? Math.round((props.mission.progress.done / props.mission.progress.total) * 100) : 0));
 const isActive = computed(() => ['open', 'in_progress'].includes(props.mission.status));
 
 const editing = ref(false);
@@ -62,6 +68,21 @@ const cancelMission = () => {
         router.post(route('missions.cancel', props.mission.id), {}, { preserveScroll: true });
     }
 };
+
+const taskForm = useForm({
+    title: '',
+    assignee_id: null as number | null,
+    due_date: '',
+});
+
+const addTask = () => {
+    taskForm.post(route('tasks.store', props.mission.id), {
+        preserveScroll: true,
+        onSuccess: () => taskForm.reset(),
+    });
+};
+
+const complete = () => router.post(route('missions.complete', props.mission.id), {}, { preserveScroll: true });
 
 const reopen = () => router.post(route('missions.reopen', props.mission.id), {}, { preserveScroll: true });
 
@@ -122,13 +143,52 @@ const destroy = () => {
                     </div>
                 </dl>
 
-                <div v-if="can.update || can.delete" class="flex flex-wrap gap-2">
+                <div v-if="can.update || can.delete || can.complete" class="flex flex-wrap gap-2">
+                    <Button v-if="can.complete" size="sm" @click="complete">Complete mission</Button>
                     <Button v-if="can.update" variant="outline" size="sm" @click="editing = true">Edit</Button>
                     <Button v-if="can.update && isActive" variant="outline" size="sm" @click="cancelMission">Cancel mission</Button>
                     <Button v-if="can.update && !isActive" variant="outline" size="sm" @click="reopen">Reopen</Button>
                     <Button v-if="can.delete" variant="ghost" size="sm" class="text-destructive" @click="destroy">Delete</Button>
                 </div>
-                <InputError :message="statusError" />
+                <InputError :message="errors.status ?? errors.blocked_reason" />
+
+                <section class="space-y-4">
+                    <div class="flex items-end justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold">Tasks</h2>
+                            <p class="text-sm text-muted-foreground">
+                                {{ mission.progress.done }} of {{ mission.progress.total }} done
+                                <template v-if="!mission.lead">· appoint a team lead to break this mission down</template>
+                            </p>
+                        </div>
+                        <span class="text-sm font-medium tabular-nums">{{ progress }}%</span>
+                    </div>
+                    <div class="h-1.5 overflow-hidden rounded-full bg-muted">
+                        <div class="h-full rounded-full bg-primary transition-all" :style="{ width: `${progress}%` }" />
+                    </div>
+
+                    <form v-if="can.manageTasks && isActive" @submit.prevent="addTask" class="flex flex-wrap gap-2">
+                        <Input v-model="taskForm.title" required placeholder="Add a task…" class="min-w-0 flex-1" aria-label="Task title" />
+                        <select
+                            v-model="taskForm.assignee_id"
+                            aria-label="Assignee"
+                            class="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                        >
+                            <option :value="null">Unassigned</option>
+                            <option v-for="person in assignees" :key="person.id" :value="person.id">{{ person.name }}</option>
+                        </select>
+                        <Input v-model="taskForm.due_date" type="date" class="w-auto" aria-label="Due date" />
+                        <Button :disabled="taskForm.processing">Add</Button>
+                    </form>
+                    <InputError :message="taskForm.errors.title ?? taskForm.errors.assignee_id" />
+
+                    <ul v-if="tasks.length" class="divide-y rounded-lg border">
+                        <TaskRow v-for="task in tasks" :key="task.id" :task="task" :assignees="assignees" :can-manage="can.manageTasks" />
+                    </ul>
+                    <p v-else class="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+                        No tasks yet. The team lead breaks the mission down into tasks and assigns them.
+                    </p>
+                </section>
             </template>
         </div>
     </AppLayout>
