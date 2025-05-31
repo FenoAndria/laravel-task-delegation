@@ -4,7 +4,10 @@ use App\Http\Controllers\CurrentOrganizationController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\MissionStatusController;
+use App\Http\Controllers\MyTaskController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TaskStatusController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +33,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('dashboard');
 
         Route::resource('missions', MissionController::class)->except(['create', 'edit']);
+        Route::post('missions/{mission}/complete', [MissionStatusController::class, 'complete'])->name('missions.complete');
+        Route::post('missions/{mission}/tasks', [TaskController::class, 'store'])->name('tasks.store');
+        Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+        Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::put('tasks/{task}/status', [TaskStatusController::class, 'update'])->name('tasks.status.update');
+        Route::get('my-tasks', [MyTaskController::class, 'index'])->name('tasks.mine');
         Route::post('missions/{mission}/cancel', [MissionStatusController::class, 'cancel'])->name('missions.cancel');
         Route::post('missions/{mission}/reopen', [MissionStatusController::class, 'reopen'])->name('missions.reopen');
 

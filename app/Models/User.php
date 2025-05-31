@@ -87,6 +87,14 @@ class User extends Authenticatable
         return $this->hasMany(Team::class, 'lead_id');
     }
 
+    /**
+     * @return HasMany<Task, $this>
+     */
+    public function assignedTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assignee_id');
+    }
+
     public function belongsToOrganization(Organization $organization): bool
     {
         return $this->organizations()->whereKey($organization->id)->exists();

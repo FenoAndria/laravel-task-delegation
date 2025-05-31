@@ -59,6 +59,14 @@ class Organization extends Model
     }
 
     /**
+     * @return HasMany<Task, $this>
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    /**
      * @return HasMany<Invitation, $this>
      */
     public function invitations(): HasMany
