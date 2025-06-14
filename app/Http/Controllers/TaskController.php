@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityType;
+use App\Models\Activity;
 use App\Models\Mission;
 use App\Models\Task;
 use App\Models\User;
@@ -21,12 +23,18 @@ class TaskController extends Controller
             throw ValidationException::withMessages(['title' => 'The mission is closed: reopen it to add tasks.']);
         }
 
-        $mission->tasks()->create([
+        $task = $mission->tasks()->create([
             ...$request->validate($this->rules($mission)),
             'organization_id' => $mission->organization_id,
             'created_by' => $this->user($request)->id,
             'position' => (int) $mission->tasks()->max('position') + 1,
         ]);
+
+        Activity::record($mission, $this->user($request), ActivityType::TaskCreated, ['task' => $task->title], $task);
+
+        if ($task->assignee) {
+            Activity::record($mission, $this->user($request), ActivityType::TaskAssigned, ['task' => $task->title, 'assignee' => $task->assignee->name], $task);
+        }
 
         return to_route('missions.show', $mission);
     }
@@ -38,6 +46,13 @@ class TaskController extends Controller
 
         $task->update($request->validate($this->rules($task->mission)));
 
+        if ($task->wasChanged('assignee_id')) {
+            Activity::record($task->mission, $this->user($request), ActivityType::TaskAssigned, array_filter([
+                'task' => $task->title,
+                'assignee' => $task->assignee?->name,
+            ]), $task);
+        }
+
         return back();
     }
 
@@ -47,6 +62,7 @@ class TaskController extends Controller
         $this->authorize('delete', $task);
 
         $task->delete();
+        Activity::record($task->mission, $this->user($request), ActivityType::TaskDeleted, ['task' => $task->title]);
 
         return to_route('missions.show', $task->mission_id);
     }

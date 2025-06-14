@@ -21,7 +21,7 @@ class TaskStatusController extends Controller
             'blocked_reason' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $changeStatus->handle($task, TaskStatus::from($validated['status']), $validated['blocked_reason'] ?? null);
+        $changeStatus->handle($this->user($request), $task, TaskStatus::from($validated['status']), $validated['blocked_reason'] ?? null);
 
         return back();
     }

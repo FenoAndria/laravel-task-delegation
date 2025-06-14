@@ -2,9 +2,12 @@
 
 namespace App\Actions\Missions;
 
+use App\Enums\ActivityType;
 use App\Enums\MissionStatus;
 use App\Enums\TaskStatus;
+use App\Models\Activity;
 use App\Models\Mission;
+use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
 class CompleteMission
@@ -12,7 +15,7 @@ class CompleteMission
     /**
      * A mission is complete once at least one task is done and every other task is done or cancelled.
      */
-    public function handle(Mission $mission): void
+    public function handle(Mission $mission, ?User $actor = null): void
     {
         if (! $mission->status->isActive()) {
             throw ValidationException::withMessages(['status' => 'Only an active mission can be completed.']);
@@ -23,6 +26,7 @@ class CompleteMission
         }
 
         $mission->update(['status' => MissionStatus::Completed, 'completed_at' => now()]);
+        Activity::record($mission, $actor, ActivityType::MissionCompleted);
     }
 
     public static function canComplete(Mission $mission): bool

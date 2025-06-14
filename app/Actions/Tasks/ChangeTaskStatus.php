@@ -2,15 +2,18 @@
 
 namespace App\Actions\Tasks;
 
+use App\Enums\ActivityType;
 use App\Enums\MissionStatus;
 use App\Enums\TaskStatus;
+use App\Models\Activity;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ChangeTaskStatus
 {
-    public function handle(Task $task, TaskStatus $status, ?string $blockedReason = null): void
+    public function handle(?User $actor, Task $task, TaskStatus $status, ?string $blockedReason = null): void
     {
         $mission = $task->mission;
 
@@ -28,7 +31,9 @@ class ChangeTaskStatus
             throw ValidationException::withMessages(['blocked_reason' => 'Say what is blocking the task.']);
         }
 
-        DB::transaction(function () use ($task, $mission, $status, $blockedReason) {
+        DB::transaction(function () use ($actor, $task, $mission, $status, $blockedReason) {
+            $from = $task->status;
+
             $task->update([
                 'status' => $status,
                 'blocked_reason' => $status === TaskStatus::Blocked ? $blockedReason : null,
@@ -38,7 +43,15 @@ class ChangeTaskStatus
             // The mission starts as soon as someone starts working on it.
             if ($mission->status === MissionStatus::Open && in_array($status, [TaskStatus::InProgress, TaskStatus::Done], true)) {
                 $mission->update(['status' => MissionStatus::InProgress]);
+                Activity::record($mission, $actor, ActivityType::MissionStarted);
             }
+
+            Activity::record($mission, $actor, ActivityType::TaskStatusChanged, array_filter([
+                'task' => $task->title,
+                'from' => $from->value,
+                'to' => $status->value,
+                'reason' => $status === TaskStatus::Blocked ? $blockedReason : null,
+            ]), $task);
         });
     }
 }

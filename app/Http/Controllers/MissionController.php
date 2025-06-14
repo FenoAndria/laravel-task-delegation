@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Missions\CompleteMission;
+use App\Enums\ActivityType;
 use App\Enums\MissionStatus;
 use App\Enums\Priority;
 use App\Enums\TaskStatus;
 use App\Http\Presenters\TaskPresenter;
+use App\Http\Presenters\TimelinePresenter;
+use App\Models\Activity;
 use App\Models\Mission;
 use App\Models\Organization;
 use App\Models\Task;
@@ -65,6 +68,8 @@ class MissionController extends Controller
             'created_by' => $this->user($request)->id,
         ]);
 
+        Activity::record($mission, $this->user($request), ActivityType::MissionCreated);
+
         return to_route('missions.show', $mission);
     }
 
@@ -89,6 +94,7 @@ class MissionController extends Controller
                 'completed_at' => $mission->completed_at?->toDateString(),
             ],
             'tasks' => $mission->tasks->map(fn (Task $task) => TaskPresenter::present($task, $user)),
+            'timeline' => TimelinePresenter::present($mission, $user),
             'assignees' => collect([$team->lead])->filter()->merge($team->members)->unique('id')
                 ->map(fn (User $person) => $person->only('id', 'name'))->values(),
             'teams' => $mission->organization->teams()->orderBy('name')->get(['id', 'name']),
