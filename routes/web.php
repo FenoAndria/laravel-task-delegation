@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CurrentOrganizationController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MissionController;
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::resource('missions', MissionController::class)->except(['create', 'edit']);
         Route::post('missions/{mission}/complete', [MissionStatusController::class, 'complete'])->name('missions.complete');
+        Route::post('missions/{mission}/comments', [CommentController::class, 'store'])->name('comments.store');
+        Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
         Route::post('missions/{mission}/tasks', [TaskController::class, 'store'])->name('tasks.store');
         Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
         Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
