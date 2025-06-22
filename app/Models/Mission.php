@@ -90,6 +90,22 @@ class Mission extends Model
         return $this->hasMany(Task::class)->orderBy('position')->orderBy('id');
     }
 
+    /**
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * @return HasMany<Activity, $this>
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
+
     public function isOverdue(): bool
     {
         return $this->status->isActive() && $this->due_date !== null && $this->due_date->isBefore(today());

@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 
 import InputError from '@/components/InputError.vue';
 import MissionFields, { type MissionFormData } from '@/components/missions/MissionFields.vue';
+import MissionTimeline, { type TimelineEntry } from '@/components/missions/MissionTimeline.vue';
 import PriorityLabel from '@/components/missions/PriorityLabel.vue';
 import StatusBadge from '@/components/missions/StatusBadge.vue';
 import TaskRow, { type TaskItem } from '@/components/tasks/TaskRow.vue';
@@ -31,6 +32,7 @@ const props = defineProps<{
         progress: { done: number; total: number };
     };
     tasks: TaskItem[];
+    timeline: TimelineEntry[];
     assignees: { id: number; name: string }[];
     teams: { id: number; name: string }[];
     priorities: { value: string; label: string }[];
@@ -189,6 +191,8 @@ const destroy = () => {
                         No tasks yet. The team lead breaks the mission down into tasks and assigns them.
                     </p>
                 </section>
+
+                <MissionTimeline :mission-id="mission.id" :entries="timeline" />
             </template>
         </div>
     </AppLayout>
