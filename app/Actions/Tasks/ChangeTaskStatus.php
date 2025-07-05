@@ -8,6 +8,8 @@ use App\Enums\TaskStatus;
 use App\Models\Activity;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\Notify;
+use App\Notifications\TaskBlocked;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -52,6 +54,10 @@ class ChangeTaskStatus
                 'to' => $status->value,
                 'reason' => $status === TaskStatus::Blocked ? $blockedReason : null,
             ]), $task);
+
+            if ($status === TaskStatus::Blocked && $actor !== null) {
+                Notify::send([$mission->team->lead], new TaskBlocked($task, $actor), $actor);
+            }
         });
     }
 }

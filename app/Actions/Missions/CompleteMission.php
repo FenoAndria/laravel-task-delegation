@@ -8,6 +8,8 @@ use App\Enums\TaskStatus;
 use App\Models\Activity;
 use App\Models\Mission;
 use App\Models\User;
+use App\Notifications\MissionCompleted;
+use App\Notifications\Notify;
 use Illuminate\Validation\ValidationException;
 
 class CompleteMission
@@ -27,6 +29,7 @@ class CompleteMission
 
         $mission->update(['status' => MissionStatus::Completed, 'completed_at' => now()]);
         Activity::record($mission, $actor, ActivityType::MissionCompleted);
+        Notify::send([$mission->creator], new MissionCompleted($mission), $actor);
     }
 
     public static function canComplete(Mission $mission): bool

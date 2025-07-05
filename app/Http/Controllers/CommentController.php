@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Mission;
+use App\Notifications\CommentPosted;
+use App\Notifications\Notify;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -17,11 +19,15 @@ class CommentController extends Controller
         $this->ensureInOrganization($request, $mission);
         $this->authorize('view', $mission);
 
-        $mission->comments()->create([
+        $comment = $mission->comments()->create([
             ...$request->validate(['body' => ['required', 'string', 'max:5000']]),
             'organization_id' => $mission->organization_id,
             'user_id' => $this->user($request)->id,
         ]);
+
+        $involved = $mission->tasks()->with('assignee')->get()->pluck('assignee')
+            ->push($mission->team->lead, $mission->creator);
+        Notify::send($involved, new CommentPosted($comment), $this->user($request));
 
         return back();
     }
