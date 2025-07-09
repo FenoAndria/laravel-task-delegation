@@ -3,10 +3,14 @@ import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import OrganizationSwitcher from '@/components/OrganizationSwitcher.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Flag, LayoutGrid, ListTodo, Users } from 'lucide-vue-next';
+import { type NavItem, type SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
+import { Bell, Flag, LayoutGrid, ListTodo, Users } from 'lucide-vue-next';
+import { computed } from 'vue';
 
-const mainNavItems: NavItem[] = [
+const page = usePage<SharedData>();
+
+const mainNavItems = computed<NavItem[]>(() => [
     {
         title: 'Dashboard',
         href: '/dashboard',
@@ -27,7 +31,13 @@ const mainNavItems: NavItem[] = [
         href: '/teams',
         icon: Users,
     },
-];
+    {
+        title: 'Notifications',
+        href: '/notifications',
+        icon: Bell,
+        badge: page.props.unreadNotifications,
+    },
+]);
 </script>
 
 <template>

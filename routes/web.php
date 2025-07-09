@@ -6,6 +6,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\MissionStatusController;
 use App\Http\Controllers\MyTaskController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskStatusController;
@@ -42,6 +43,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::put('tasks/{task}/status', [TaskStatusController::class, 'update'])->name('tasks.status.update');
         Route::get('my-tasks', [MyTaskController::class, 'index'])->name('tasks.mine');
+
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/read', [NotificationController::class, 'markAllRead'])->name('notifications.read');
+        Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
         Route::post('missions/{mission}/cancel', [MissionStatusController::class, 'cancel'])->name('missions.cancel');
         Route::post('missions/{mission}/reopen', [MissionStatusController::class, 'reopen'])->name('missions.reopen');
 
