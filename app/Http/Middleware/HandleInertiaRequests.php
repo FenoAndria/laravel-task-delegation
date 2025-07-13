@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'unreadNotifications' => fn () => $this->unreadNotifications($request),
             'auth' => [
                 'user' => $request->user(),
                 'organization' => fn () => $this->currentOrganization($request),
@@ -50,6 +51,17 @@ class HandleInertiaRequests extends Middleware
                     ->map(fn (Organization $organization) => $organization->only('id', 'name')),
             ],
         ]);
+    }
+
+    private function unreadNotifications(Request $request): int
+    {
+        $user = $request->user();
+
+        if ($user === null || $user->current_organization_id === null) {
+            return 0;
+        }
+
+        return $user->unreadNotifications()->where('data->organization_id', $user->current_organization_id)->count();
     }
 
     /**

@@ -31,12 +31,14 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
+    badge?: number;
 }
 
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    unreadNotifications: number;
     ziggy: {
         location: string;
         url: string;

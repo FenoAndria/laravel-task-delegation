@@ -7,6 +7,8 @@ use App\Models\Activity;
 use App\Models\Mission;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\Notify;
+use App\Notifications\TaskAssigned;
 use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,6 +36,7 @@ class TaskController extends Controller
 
         if ($task->assignee) {
             Activity::record($mission, $this->user($request), ActivityType::TaskAssigned, ['task' => $task->title, 'assignee' => $task->assignee->name], $task);
+            Notify::send([$task->assignee], new TaskAssigned($task, $this->user($request)), $this->user($request));
         }
 
         return to_route('missions.show', $mission);
@@ -51,6 +54,8 @@ class TaskController extends Controller
                 'task' => $task->title,
                 'assignee' => $task->assignee?->name,
             ]), $task);
+
+            Notify::send([$task->assignee], new TaskAssigned($task, $this->user($request)), $this->user($request));
         }
 
         return back();

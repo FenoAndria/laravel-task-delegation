@@ -15,6 +15,8 @@ use App\Models\Organization;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
+use App\Notifications\MissionEntrusted;
+use App\Notifications\Notify;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -69,6 +71,7 @@ class MissionController extends Controller
         ]);
 
         Activity::record($mission, $this->user($request), ActivityType::MissionCreated);
+        Notify::send([$mission->team->lead], new MissionEntrusted($mission), $this->user($request));
 
         return to_route('missions.show', $mission);
     }
@@ -114,6 +117,10 @@ class MissionController extends Controller
         $this->authorize('update', $mission);
 
         $mission->update($request->validate($this->rules($mission->organization)));
+
+        if ($mission->wasChanged('team_id')) {
+            Notify::send([$mission->fresh('team.lead')?->team->lead], new MissionEntrusted($mission), $this->user($request));
+        }
 
         return to_route('missions.show', $mission);
     }
