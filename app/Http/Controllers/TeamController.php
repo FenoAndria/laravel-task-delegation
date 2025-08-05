@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Teams\ManageTeamMembers;
+use App\Delegation\Workload;
+use App\Delegation\WorkloadCalculator;
 use App\Models\Organization;
 use App\Models\Team;
 use App\Models\User;
@@ -58,7 +60,7 @@ class TeamController extends Controller
         return to_route('teams.show', $team);
     }
 
-    public function show(Request $request, Team $team): Response
+    public function show(Request $request, Team $team, WorkloadCalculator $workloads): Response
     {
         $this->ensureInOrganization($request, $team);
         $user = $this->user($request);
@@ -73,6 +75,7 @@ class TeamController extends Controller
                 'members' => $team->members->sortBy('name')->values()->map->only('id', 'name', 'email'),
             ],
             'people' => $this->people($team->organization),
+            'workload' => $workloads->forTeam($team)->map(fn (Workload $workload) => $workload->toArray()),
             'can' => [
                 'update' => $user->can('update', $team),
                 'delete' => $user->can('delete', $team),

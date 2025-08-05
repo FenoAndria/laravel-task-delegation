@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Missions\CompleteMission;
+use App\Delegation\AssigneeSuggester;
+use App\Delegation\RiskDetector;
 use App\Enums\ActivityType;
 use App\Enums\MissionStatus;
 use App\Enums\Priority;
@@ -76,10 +78,10 @@ class MissionController extends Controller
         return to_route('missions.show', $mission);
     }
 
-    public function show(Request $request, Mission $mission): Response
+    public function show(Request $request, Mission $mission, AssigneeSuggester $suggester, RiskDetector $risks): Response
     {
         $this->ensureInOrganization($request, $mission);
-        $mission->load('team:id,name,lead_id', 'team.lead:id,name', 'team.members:id,name', 'creator:id,name', 'tasks.assignee:id,name');
+        $mission->load('team:id,organization_id,name,lead_id', 'team.lead:id,name', 'team.members:id,name', 'creator:id,name', 'tasks.assignee:id,name');
         $mission->tasks->each->setRelation('mission', $mission);
         $mission->setAttribute('tasks_total', $mission->tasks->where('status', '!=', TaskStatus::Cancelled)->count());
         $mission->setAttribute('tasks_done', $mission->tasks->where('status', TaskStatus::Done)->count());
@@ -98,6 +100,8 @@ class MissionController extends Controller
             ],
             'tasks' => $mission->tasks->map(fn (Task $task) => TaskPresenter::present($task, $user)),
             'timeline' => TimelinePresenter::present($mission, $user),
+            'suggestions' => $user->can('manage', [Task::class, $mission]) && $mission->status->isActive() ? $suggester->suggest($mission) : [],
+            'risks' => $risks->detect($mission->organization, $mission),
             'assignees' => collect([$team->lead])->filter()->merge($team->members)->unique('id')
                 ->map(fn (User $person) => $person->only('id', 'name'))->values(),
             'teams' => $mission->organization->teams()->orderBy('name')->get(['id', 'name']),

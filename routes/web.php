@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CurrentOrganizationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\MissionStatusController;
@@ -30,9 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('current-organization', [CurrentOrganizationController::class, 'update'])->name('current-organization.update');
 
     Route::middleware('organization')->group(function () {
-        Route::get('dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->name('dashboard');
+        Route::get('dashboard', DashboardController::class)->name('dashboard');
 
         Route::resource('missions', MissionController::class)->except(['create', 'edit']);
         Route::post('missions/{mission}/complete', [MissionStatusController::class, 'complete'])->name('missions.complete');
