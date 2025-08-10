@@ -3,6 +3,7 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 import InputError from '@/components/InputError.vue';
+import RiskList, { type RiskItem } from '@/components/delegation/RiskList.vue';
 import MissionFields, { type MissionFormData } from '@/components/missions/MissionFields.vue';
 import MissionTimeline, { type TimelineEntry } from '@/components/missions/MissionTimeline.vue';
 import PriorityLabel from '@/components/missions/PriorityLabel.vue';
@@ -33,6 +34,8 @@ const props = defineProps<{
     };
     tasks: TaskItem[];
     timeline: TimelineEntry[];
+    suggestions: { user: { id: number; name: string }; level: string; reason: string }[];
+    risks: RiskItem[];
     assignees: { id: number; name: string }[];
     teams: { id: number; name: string }[];
     priorities: { value: string; label: string }[];
@@ -154,6 +157,13 @@ const destroy = () => {
                 </div>
                 <InputError :message="errors.status ?? errors.blocked_reason" />
 
+                <section
+                    v-if="risks.length"
+                    class="rounded-lg border border-amber-300/60 bg-amber-50/50 px-4 dark:border-amber-900/60 dark:bg-amber-950/20"
+                >
+                    <RiskList :risks="risks" />
+                </section>
+
                 <section class="space-y-4">
                     <div class="flex items-end justify-between gap-4">
                         <div>
@@ -182,6 +192,21 @@ const destroy = () => {
                         <Input v-model="taskForm.due_date" type="date" class="w-auto" aria-label="Due date" />
                         <Button :disabled="taskForm.processing">Add</Button>
                     </form>
+                    <div v-if="can.manageTasks && isActive && suggestions.length" class="flex flex-wrap items-center gap-2 text-sm">
+                        <span class="text-muted-foreground">Suggested:</span>
+                        <button
+                            v-for="suggestion in suggestions"
+                            :key="suggestion.user.id"
+                            type="button"
+                            :title="suggestion.reason"
+                            class="rounded-full border px-3 py-1 hover:bg-accent"
+                            :class="{ 'border-primary bg-accent': taskForm.assignee_id === suggestion.user.id }"
+                            @click="taskForm.assignee_id = suggestion.user.id"
+                        >
+                            {{ suggestion.user.name }}
+                            <span class="text-muted-foreground">· {{ suggestion.reason }}</span>
+                        </button>
+                    </div>
                     <InputError :message="taskForm.errors.title ?? taskForm.errors.assignee_id" />
 
                     <ul v-if="tasks.length" class="divide-y rounded-lg border">

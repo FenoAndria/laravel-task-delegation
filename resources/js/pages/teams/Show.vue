@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 import Heading from '@/components/Heading.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
+import WorkloadList, { type WorkloadItem } from '@/components/delegation/WorkloadList.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +27,7 @@ const props = defineProps<{
         members: Person[];
     };
     people: Person[];
+    workload: WorkloadItem[];
     can: { update: boolean; delete: boolean; manageMembers: boolean };
 }>();
 
@@ -154,6 +156,11 @@ const destroy = () => {
                     </li>
                 </ul>
                 <p v-else class="text-sm text-muted-foreground">No members yet.</p>
+            </section>
+
+            <section v-if="workload.length" class="space-y-4">
+                <HeadingSmall title="Workload" description="Open work of each person across the organization, against a weekly capacity" />
+                <WorkloadList :items="workload" />
             </section>
 
             <section v-if="can.delete" class="space-y-4 border-t pt-6">

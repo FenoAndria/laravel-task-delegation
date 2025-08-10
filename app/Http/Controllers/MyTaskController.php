@@ -23,7 +23,7 @@ class MyTaskController extends Controller
             ->where(fn ($query) => $query
                 ->whereIn('status', [TaskStatus::Todo, TaskStatus::InProgress, TaskStatus::Blocked])
                 ->orWhere('completed_at', '>=', now()->subDays(14)))
-            ->with('mission:id,title,team_id,status', 'mission.team:id,name,lead_id', 'assignee:id,name')
+            ->with('mission:id,organization_id,title,team_id,status', 'mission.team:id,organization_id,name,lead_id', 'assignee:id,name')
             ->orderByRaw('due_date is null, due_date')
             ->get();
 
