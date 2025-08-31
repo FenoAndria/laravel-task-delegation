@@ -4,6 +4,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Demo mode
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, the login page offers one-click access to the demo personas
+    | and the database can be reset with `php artisan demo:reset`.
+    |
+    */
+
+    'demo' => (bool) env('DELEGO_DEMO', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Workload
     |--------------------------------------------------------------------------
     |

@@ -6,7 +6,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { type SharedData } from '@/types';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -19,6 +20,14 @@ const form = useForm({
     password: '',
     remember: false,
 });
+
+const page = usePage<SharedData>();
+const personas = [
+    { key: 'admin', name: 'Maya', role: 'Owner', hint: 'Entrusts missions to teams' },
+    { key: 'lead', name: 'Tom', role: 'Lead', hint: 'Breaks missions down' },
+    { key: 'member', name: 'Sara', role: 'Member', hint: 'Delivers the tasks' },
+];
+const loginAs = (persona: string) => router.post(route('demo.login', persona));
 
 const submit = () => {
     form.post(route('login'), {
@@ -33,6 +42,24 @@ const submit = () => {
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
             {{ status }}
+        </div>
+
+        <div v-if="page.props.demo" class="mb-6 space-y-3">
+            <p class="text-center text-sm font-medium">Explore the demo as</p>
+            <div class="grid grid-cols-3 gap-2">
+                <button
+                    v-for="persona in personas"
+                    :key="persona.key"
+                    type="button"
+                    class="rounded-md border p-3 text-left hover:bg-accent"
+                    @click="loginAs(persona.key)"
+                >
+                    <span class="block text-sm font-medium">{{ persona.name }}</span>
+                    <span class="block text-xs text-muted-foreground">{{ persona.role }}</span>
+                    <span class="mt-1 block text-xs text-muted-foreground">{{ persona.hint }}</span>
+                </button>
+            </div>
+            <p class="text-center text-xs uppercase tracking-wide text-muted-foreground">or log in</p>
         </div>
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
