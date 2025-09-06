@@ -64,7 +64,7 @@ const destroy = () => {
             <p class="truncate text-sm font-medium" :class="{ 'text-muted-foreground line-through': task.status === 'cancelled' }">
                 {{ task.title }}
             </p>
-            <p v-if="task.mission" class="truncate text-xs text-muted-foreground">
+            <p v-if="task.mission" class="text-muted-foreground truncate text-xs">
                 <Link :href="route('missions.show', task.mission.id)" class="hover:underline">{{ task.mission.title }}</Link>
                 · {{ task.team }}
             </p>
@@ -77,13 +77,13 @@ const destroy = () => {
             v-if="canManage && assignees"
             :value="task.assignee?.id ?? ''"
             aria-label="Assignee"
-            class="h-8 rounded-md border border-input bg-background px-2 text-sm"
+            class="border-input bg-background h-8 rounded-md border px-2 text-sm"
             @change="assign(($event.target as HTMLSelectElement).value)"
         >
             <option value="">Unassigned</option>
             <option v-for="person in assignees" :key="person.id" :value="person.id">{{ person.name }}</option>
         </select>
-        <span v-else-if="!task.mission" class="text-sm text-muted-foreground">{{ task.assignee?.name ?? 'Unassigned' }}</span>
+        <span v-else-if="!task.mission" class="text-muted-foreground text-sm">{{ task.assignee?.name ?? 'Unassigned' }}</span>
 
         <span v-if="task.due_date" class="text-sm tabular-nums" :class="task.overdue ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'">
             {{ task.due_date }}
@@ -95,7 +95,7 @@ const destroy = () => {
             v-if="task.transitions.length"
             value=""
             aria-label="Move task"
-            class="h-8 rounded-md border border-input bg-background px-2 text-sm"
+            class="border-input bg-background h-8 rounded-md border px-2 text-sm"
             @change="changeStatus(($event.target as HTMLSelectElement).value)"
         >
             <option value="" disabled>Move to…</option>

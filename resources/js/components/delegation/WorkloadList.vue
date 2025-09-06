@@ -25,13 +25,13 @@ const barTone: Record<WorkloadItem['level'], string> = {
         <li v-for="item in items" :key="item.user.id" class="space-y-1.5">
             <div class="flex items-baseline justify-between gap-2 text-sm">
                 <span class="truncate font-medium">{{ item.user.name }}</span>
-                <span class="shrink-0 tabular-nums text-muted-foreground">
+                <span class="text-muted-foreground shrink-0 tabular-nums">
                     {{ item.hours }}h / {{ item.capacity }}h
                     <span v-if="item.overdue" class="text-red-600 dark:text-red-400"> · {{ item.overdue }} overdue</span>
                 </span>
             </div>
             <div
-                class="h-1.5 overflow-hidden rounded-full bg-muted"
+                class="bg-muted h-1.5 overflow-hidden rounded-full"
                 role="meter"
                 :aria-valuenow="item.percent"
                 aria-valuemin="0"

@@ -85,7 +85,7 @@ const submit = () => {
                 <select
                     :value="filters.team ?? ''"
                     aria-label="Filter by team"
-                    class="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                    class="border-input bg-background h-9 rounded-md border px-3 text-sm"
                     @change="filter({ team: Number(($event.target as HTMLSelectElement).value) || null })"
                 >
                     <option value="">All teams</option>
@@ -95,9 +95,9 @@ const submit = () => {
 
             <ul v-if="missions.length" class="divide-y rounded-lg border">
                 <li v-for="mission in missions" :key="mission.id">
-                    <Link :href="route('missions.show', mission.id)" class="flex flex-wrap items-center gap-x-4 gap-y-1 p-4 hover:bg-accent/50">
+                    <Link :href="route('missions.show', mission.id)" class="hover:bg-accent/50 flex flex-wrap items-center gap-x-4 gap-y-1 p-4">
                         <span class="min-w-0 flex-1 truncate font-medium">{{ mission.title }}</span>
-                        <span class="text-sm text-muted-foreground">{{ mission.team.name }}</span>
+                        <span class="text-muted-foreground text-sm">{{ mission.team.name }}</span>
                         <PriorityLabel :priority="mission.priority" />
                         <span
                             v-if="mission.due_date"
@@ -113,7 +113,7 @@ const submit = () => {
 
             <div v-else class="rounded-lg border border-dashed p-10 text-center">
                 <p class="font-medium">No missions here</p>
-                <p class="mt-1 text-sm text-muted-foreground">
+                <p class="text-muted-foreground mt-1 text-sm">
                     <template v-if="!teams.length">Create a team first: missions are entrusted to teams.</template>
                     <template v-else-if="canCreate">Entrust a first mission to one of your teams.</template>
                     <template v-else>Missions entrusted to your teams will show up here.</template>

@@ -101,7 +101,7 @@ const remove = (member: Member) => {
                             placeholder="name@company.com"
                             class="min-w-0 flex-1"
                         />
-                        <select v-model="inviteForm.role" aria-label="Role" class="h-9 rounded-md border border-input bg-background px-3 text-sm">
+                        <select v-model="inviteForm.role" aria-label="Role" class="border-input bg-background h-9 rounded-md border px-3 text-sm">
                             <option v-for="role in roles" :key="role.value" :value="role.value">{{ role.label }}</option>
                         </select>
                         <Button :disabled="inviteForm.processing">Send invitation</Button>
@@ -115,7 +115,7 @@ const remove = (member: Member) => {
                         <li v-for="invitation in invitations" :key="invitation.id" class="flex flex-wrap items-center gap-4 p-4">
                             <div class="min-w-0 flex-1">
                                 <p class="truncate text-sm font-medium">{{ invitation.email }}</p>
-                                <p class="text-sm text-muted-foreground">
+                                <p class="text-muted-foreground text-sm">
                                     <span class="capitalize">{{ invitation.role }}</span> ·
                                     <span v-if="invitation.expired" class="text-destructive">expired</span>
                                     <span v-else>expires {{ invitation.expires_at }}</span>
@@ -138,19 +138,19 @@ const remove = (member: Member) => {
                                 {{ member.name }}
                                 <span v-if="member.id === currentUserId" class="text-muted-foreground">(you)</span>
                             </p>
-                            <p class="truncate text-sm text-muted-foreground">{{ member.email }}</p>
+                            <p class="text-muted-foreground truncate text-sm">{{ member.email }}</p>
                         </div>
 
                         <select
                             v-if="canManage"
                             :value="member.role"
                             :aria-label="`Role of ${member.name}`"
-                            class="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                            class="border-input bg-background h-9 rounded-md border px-3 text-sm"
                             @change="changeRole(member, ($event.target as HTMLSelectElement).value)"
                         >
                             <option v-for="role in roles" :key="role.value" :value="role.value">{{ role.label }}</option>
                         </select>
-                        <span v-else class="text-sm capitalize text-muted-foreground">{{ member.role }}</span>
+                        <span v-else class="text-muted-foreground text-sm capitalize">{{ member.role }}</span>
 
                         <Button v-if="canManage || member.id === currentUserId" variant="ghost" size="sm" @click="remove(member)">
                             {{ member.id === currentUserId ? 'Leave' : 'Remove' }}

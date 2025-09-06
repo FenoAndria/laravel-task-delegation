@@ -28,7 +28,7 @@ const page = usePage<SharedData>();
                         <span>{{ item.title }}</span>
                         <span
                             v-if="item.badge"
-                            class="ml-auto rounded-full bg-primary px-1.5 text-xs font-medium tabular-nums text-primary-foreground"
+                            class="bg-primary text-primary-foreground ml-auto rounded-full px-1.5 text-xs font-medium tabular-nums"
                         >
                             {{ item.badge }}
                         </span>

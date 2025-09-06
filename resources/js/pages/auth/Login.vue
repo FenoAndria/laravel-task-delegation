@@ -51,15 +51,15 @@ const submit = () => {
                     v-for="persona in personas"
                     :key="persona.key"
                     type="button"
-                    class="rounded-md border p-3 text-left hover:bg-accent"
+                    class="hover:bg-accent rounded-md border p-3 text-left"
                     @click="loginAs(persona.key)"
                 >
                     <span class="block text-sm font-medium">{{ persona.name }}</span>
-                    <span class="block text-xs text-muted-foreground">{{ persona.role }}</span>
-                    <span class="mt-1 block text-xs text-muted-foreground">{{ persona.hint }}</span>
+                    <span class="text-muted-foreground block text-xs">{{ persona.role }}</span>
+                    <span class="text-muted-foreground mt-1 block text-xs">{{ persona.hint }}</span>
                 </button>
             </div>
-            <p class="text-center text-xs uppercase tracking-wide text-muted-foreground">or log in</p>
+            <p class="text-muted-foreground text-center text-xs tracking-wide uppercase">or log in</p>
         </div>
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
@@ -109,7 +109,7 @@ const submit = () => {
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-center text-sm">
                 Don't have an account?
                 <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>

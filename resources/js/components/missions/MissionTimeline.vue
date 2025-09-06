@@ -46,28 +46,28 @@ const remove = (entry: TimelineEntry) => {
                 <div v-if="entry.kind === 'comment'" class="rounded-lg border p-3">
                     <div class="flex items-baseline gap-2 text-sm">
                         <span class="font-medium">{{ entry.actor }}</span>
-                        <time :datetime="entry.created_at ?? undefined" class="text-xs text-muted-foreground">{{ timeAgo(entry.created_at) }}</time>
+                        <time :datetime="entry.created_at ?? undefined" class="text-muted-foreground text-xs">{{ timeAgo(entry.created_at) }}</time>
                         <button
                             v-if="entry.can_delete"
                             type="button"
-                            class="ml-auto text-xs text-muted-foreground hover:text-foreground"
+                            class="text-muted-foreground hover:text-foreground ml-auto text-xs"
                             @click="remove(entry)"
                         >
                             Delete
                         </button>
                     </div>
-                    <p class="mt-1 whitespace-pre-line text-sm">{{ entry.body }}</p>
+                    <p class="mt-1 text-sm whitespace-pre-line">{{ entry.body }}</p>
                 </div>
 
-                <p v-else class="flex items-baseline gap-2 pl-3 text-sm text-muted-foreground">
+                <p v-else class="text-muted-foreground flex items-baseline gap-2 pl-3 text-sm">
                     <span
-                        ><span class="font-medium text-foreground">{{ entry.actor }}</span> {{ entry.body }}</span
+                        ><span class="text-foreground font-medium">{{ entry.actor }}</span> {{ entry.body }}</span
                     >
                     <time :datetime="entry.created_at ?? undefined" class="shrink-0 text-xs">{{ timeAgo(entry.created_at) }}</time>
                 </p>
             </li>
         </ol>
-        <p v-else class="text-sm text-muted-foreground">Nothing happened here yet.</p>
+        <p v-else class="text-muted-foreground text-sm">Nothing happened here yet.</p>
 
         <form @submit.prevent="submit" class="space-y-2">
             <textarea
@@ -76,7 +76,7 @@ const remove = (entry: TimelineEntry) => {
                 required
                 aria-label="Comment"
                 placeholder="Ask a question, share progress, flag a risk…"
-                class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                class="border-input bg-background w-full rounded-md border px-3 py-2 text-sm"
             />
             <InputError :message="form.errors.body" />
             <Button size="sm" :disabled="form.processing || !form.body.trim()">Comment</Button>

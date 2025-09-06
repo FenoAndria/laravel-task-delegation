@@ -33,7 +33,7 @@ const dot: Record<RiskItem['level'], string> = {
                 <span class="mt-1.5 size-2 shrink-0 rounded-full" :class="dot[risk.level]" :aria-label="`${risk.level} risk`" />
                 <span class="min-w-0">
                     <span class="block text-sm font-medium">{{ risk.title }}</span>
-                    <span v-if="risk.detail" class="block text-sm text-muted-foreground">{{ risk.detail }}</span>
+                    <span v-if="risk.detail" class="text-muted-foreground block text-sm">{{ risk.detail }}</span>
                 </span>
             </component>
         </li>

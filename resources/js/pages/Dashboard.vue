@@ -45,7 +45,7 @@ const percent = (progress: { done: number; total: number }) => (progress.total ?
         <div class="space-y-6 px-4 py-6">
             <div>
                 <h1 class="text-xl font-semibold tracking-tight">Hello {{ firstName }}</h1>
-                <p class="text-sm text-muted-foreground">Here is where the work stands in {{ page.props.auth.organization?.name }}.</p>
+                <p class="text-muted-foreground text-sm">Here is where the work stands in {{ page.props.auth.organization?.name }}.</p>
             </div>
 
             <dl class="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -57,7 +57,7 @@ const percent = (progress: { done: number; total: number }) => (progress.total ?
                     class="rounded-lg border p-4"
                     :class="{ 'hover:bg-accent/50': tile.href }"
                 >
-                    <dt class="text-sm text-muted-foreground">{{ tile.label }}</dt>
+                    <dt class="text-muted-foreground text-sm">{{ tile.label }}</dt>
                     <dd class="mt-1 text-2xl font-semibold tabular-nums">{{ tile.value }}</dd>
                 </component>
             </dl>
@@ -66,13 +66,13 @@ const percent = (progress: { done: number; total: number }) => (progress.total ?
                 <section class="space-y-2 rounded-lg border p-4 lg:col-span-3">
                     <h2 class="font-semibold">Needs attention</h2>
                     <RiskList v-if="risks.length" :risks="risks" linked />
-                    <p v-else class="py-6 text-center text-sm text-muted-foreground">Nothing at risk right now.</p>
+                    <p v-else class="text-muted-foreground py-6 text-center text-sm">Nothing at risk right now.</p>
                 </section>
 
                 <section class="space-y-3 rounded-lg border p-4 lg:col-span-2">
                     <div>
                         <h2 class="font-semibold">Workload</h2>
-                        <p class="text-sm text-muted-foreground">Open work against a weekly capacity</p>
+                        <p class="text-muted-foreground text-sm">Open work against a weekly capacity</p>
                     </div>
                     <WorkloadList v-if="workload.length" :items="workload" />
                 </section>
@@ -81,7 +81,7 @@ const percent = (progress: { done: number; total: number }) => (progress.total ?
             <section class="space-y-2 rounded-lg border p-4">
                 <div class="flex items-baseline justify-between">
                     <h2 class="font-semibold">Missions in motion</h2>
-                    <Link :href="route('missions.index')" class="text-sm text-muted-foreground hover:text-foreground">All missions</Link>
+                    <Link :href="route('missions.index')" class="text-muted-foreground hover:text-foreground text-sm">All missions</Link>
                 </div>
 
                 <ul v-if="missions.length" class="divide-y">
@@ -92,13 +92,13 @@ const percent = (progress: { done: number; total: number }) => (progress.total ?
                         >
                             <span class="min-w-0">
                                 <span class="block truncate text-sm font-medium">{{ mission.title }}</span>
-                                <span class="block text-xs text-muted-foreground">{{ mission.team }}</span>
+                                <span class="text-muted-foreground block text-xs">{{ mission.team }}</span>
                             </span>
                             <span class="hidden items-center gap-2 sm:flex">
-                                <span class="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                                    <span class="block h-full rounded-full bg-primary" :style="{ width: `${percent(mission.progress)}%` }" />
+                                <span class="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
+                                    <span class="bg-primary block h-full rounded-full" :style="{ width: `${percent(mission.progress)}%` }" />
                                 </span>
-                                <span class="text-xs tabular-nums text-muted-foreground"
+                                <span class="text-muted-foreground text-xs tabular-nums"
                                     >{{ mission.progress.done }}/{{ mission.progress.total }}</span
                                 >
                             </span>
@@ -112,7 +112,7 @@ const percent = (progress: { done: number; total: number }) => (progress.total ?
                         </Link>
                     </li>
                 </ul>
-                <p v-else class="py-6 text-center text-sm text-muted-foreground">No active missions.</p>
+                <p v-else class="text-muted-foreground py-6 text-center text-sm">No active missions.</p>
             </section>
         </div>
     </AppLayout>

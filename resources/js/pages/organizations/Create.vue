@@ -32,12 +32,12 @@ const submit = () => {
                 v-for="invitation in invitations"
                 :key="invitation.token"
                 :href="route('invitations.show', invitation.token)"
-                class="flex items-center justify-between rounded-md border px-4 py-3 text-sm hover:bg-accent"
+                class="hover:bg-accent flex items-center justify-between rounded-md border px-4 py-3 text-sm"
             >
                 <span class="font-medium">{{ invitation.organization }}</span>
                 <span class="text-muted-foreground">as {{ invitation.role }}</span>
             </Link>
-            <p class="mt-2 text-center text-xs uppercase tracking-wide text-muted-foreground">or start your own</p>
+            <p class="text-muted-foreground mt-2 text-center text-xs tracking-wide uppercase">or start your own</p>
         </div>
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
@@ -52,7 +52,7 @@ const submit = () => {
                 Create organization
             </Button>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-center text-sm">
                 <TextLink v-if="hasOrganizations" :href="route('dashboard')">Back to my organization</TextLink>
                 <span v-else>Invited by someone? Their invitation will add you to their organization.</span>
             </div>

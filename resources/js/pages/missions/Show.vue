@@ -119,7 +119,7 @@ const destroy = () => {
                         <span v-if="mission.overdue" class="text-xs font-medium text-red-600 dark:text-red-400">Overdue</span>
                     </div>
                     <h1 class="text-2xl font-semibold tracking-tight">{{ mission.title }}</h1>
-                    <p v-if="mission.description" class="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                    <p v-if="mission.description" class="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
                         {{ mission.description }}
                     </p>
                 </header>
@@ -143,7 +143,7 @@ const destroy = () => {
                         <dt class="text-muted-foreground">Created</dt>
                         <dd class="mt-1 font-medium tabular-nums">
                             {{ mission.created_at
-                            }}<span v-if="mission.creator" class="font-normal text-muted-foreground"> by {{ mission.creator.name }}</span>
+                            }}<span v-if="mission.creator" class="text-muted-foreground font-normal"> by {{ mission.creator.name }}</span>
                         </dd>
                     </div>
                 </dl>
@@ -168,15 +168,15 @@ const destroy = () => {
                     <div class="flex items-end justify-between gap-4">
                         <div>
                             <h2 class="text-lg font-semibold">Tasks</h2>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-muted-foreground text-sm">
                                 {{ mission.progress.done }} of {{ mission.progress.total }} done
                                 <template v-if="!mission.lead">· appoint a team lead to break this mission down</template>
                             </p>
                         </div>
                         <span class="text-sm font-medium tabular-nums">{{ progress }}%</span>
                     </div>
-                    <div class="h-1.5 overflow-hidden rounded-full bg-muted">
-                        <div class="h-full rounded-full bg-primary transition-all" :style="{ width: `${progress}%` }" />
+                    <div class="bg-muted h-1.5 overflow-hidden rounded-full">
+                        <div class="bg-primary h-full rounded-full transition-all" :style="{ width: `${progress}%` }" />
                     </div>
 
                     <form v-if="can.manageTasks && isActive" @submit.prevent="addTask" class="flex flex-wrap gap-2">
@@ -184,7 +184,7 @@ const destroy = () => {
                         <select
                             v-model="taskForm.assignee_id"
                             aria-label="Assignee"
-                            class="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                            class="border-input bg-background h-9 rounded-md border px-3 text-sm"
                         >
                             <option :value="null">Unassigned</option>
                             <option v-for="person in assignees" :key="person.id" :value="person.id">{{ person.name }}</option>
@@ -199,7 +199,7 @@ const destroy = () => {
                             :key="suggestion.user.id"
                             type="button"
                             :title="suggestion.reason"
-                            class="rounded-full border px-3 py-1 hover:bg-accent"
+                            class="hover:bg-accent rounded-full border px-3 py-1"
                             :class="{ 'border-primary bg-accent': taskForm.assignee_id === suggestion.user.id }"
                             @click="taskForm.assignee_id = suggestion.user.id"
                         >
@@ -212,7 +212,7 @@ const destroy = () => {
                     <ul v-if="tasks.length" class="divide-y rounded-lg border">
                         <TaskRow v-for="task in tasks" :key="task.id" :task="task" :assignees="assignees" :can-manage="can.manageTasks" />
                     </ul>
-                    <p v-else class="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+                    <p v-else class="text-muted-foreground rounded-lg border border-dashed p-6 text-center text-sm">
                         No tasks yet. The team lead breaks the mission down into tasks and assigns them.
                     </p>
                 </section>

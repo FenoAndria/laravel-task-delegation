@@ -30,12 +30,12 @@ const isEmpty = computed(() => props.groups.every((group) => group.tasks.length 
 
             <div v-if="isEmpty" class="rounded-lg border border-dashed p-10 text-center">
                 <p class="font-medium">Nothing on your plate</p>
-                <p class="mt-1 text-sm text-muted-foreground">Tasks assigned to you will show up here.</p>
+                <p class="text-muted-foreground mt-1 text-sm">Tasks assigned to you will show up here.</p>
             </div>
 
             <template v-else>
                 <section v-for="group in groups.filter((group) => group.tasks.length)" :key="group.status" class="space-y-2">
-                    <h2 class="text-sm font-medium text-muted-foreground">
+                    <h2 class="text-muted-foreground text-sm font-medium">
                         {{ group.label }} <span class="tabular-nums">({{ group.tasks.length }})</span>
                     </h2>
                     <ul class="divide-y rounded-lg border">
