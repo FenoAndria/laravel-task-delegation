@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
-
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <title inertia>{{ config('app.name', 'Delego') }}</title>
+        <meta name="description" content="Delego — assisted delegation for teams. Missions flow down, progress flows up.">
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+        <meta name="theme-color" content="#faf8f5">
 
         @routes
         @vite(['resources/js/app.ts'])
