@@ -9,6 +9,7 @@ import StatusBadge from '@/components/missions/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { shortDate } from '@/lib/time';
 import { type BreadcrumbItem } from '@/types';
 
 interface MissionSummary {
@@ -102,9 +103,9 @@ const submit = () => {
                         <span
                             v-if="mission.due_date"
                             class="w-24 text-sm tabular-nums"
-                            :class="mission.overdue ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'"
+                            :class="mission.overdue ? 'text-signal' : 'text-muted-foreground'"
                         >
-                            {{ mission.due_date }}
+                            {{ shortDate(mission.due_date) }}
                         </span>
                         <StatusBadge :status="mission.status" :label="mission.status_label" />
                     </Link>

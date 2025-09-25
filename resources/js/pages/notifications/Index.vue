@@ -37,7 +37,7 @@ const markAllRead = () => router.post(route('notifications.read'), {}, { preserv
             <ul v-if="notifications.length" class="divide-y rounded-lg border">
                 <li v-for="notification in notifications" :key="notification.id">
                     <Link :href="route('notifications.show', notification.id)" class="hover:bg-accent/50 flex gap-3 p-4">
-                        <span class="mt-1.5 size-2 shrink-0 rounded-full" :class="notification.read ? 'bg-transparent' : 'bg-primary'" />
+                        <span class="mt-1.5 size-2 shrink-0 rounded-full" :class="notification.read ? 'bg-transparent' : 'bg-signal'" />
                         <span class="min-w-0 flex-1">
                             <span class="block text-sm" :class="notification.read ? 'text-muted-foreground' : 'font-medium'">{{
                                 notification.title

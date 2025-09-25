@@ -14,9 +14,9 @@ defineProps<{
 }>();
 
 const barTone: Record<WorkloadItem['level'], string> = {
-    available: 'bg-emerald-500',
-    balanced: 'bg-blue-500',
-    overloaded: 'bg-red-500',
+    available: 'bg-success',
+    balanced: 'bg-foreground',
+    overloaded: 'bg-signal',
 };
 </script>
 
@@ -26,8 +26,8 @@ const barTone: Record<WorkloadItem['level'], string> = {
             <div class="flex items-baseline justify-between gap-2 text-sm">
                 <span class="truncate font-medium">{{ item.user.name }}</span>
                 <span class="text-muted-foreground shrink-0 tabular-nums">
-                    {{ item.hours }}h / {{ item.capacity }}h
-                    <span v-if="item.overdue" class="text-red-600 dark:text-red-400"> · {{ item.overdue }} overdue</span>
+                    <span class="font-mono text-xs">{{ item.hours }}h / {{ item.capacity }}h</span>
+                    <span v-if="item.overdue" class="text-signal"> · {{ item.overdue }} overdue</span>
                 </span>
             </div>
             <div

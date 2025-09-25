@@ -3,6 +3,7 @@ import { Link, router } from '@inertiajs/vue3';
 
 import StatusBadge from '@/components/missions/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
+import { shortDate } from '@/lib/time';
 
 export interface TaskItem {
     id: number;
@@ -68,9 +69,7 @@ const destroy = () => {
                 <Link :href="route('missions.show', task.mission.id)" class="hover:underline">{{ task.mission.title }}</Link>
                 · {{ task.team }}
             </p>
-            <p v-if="task.status === 'blocked' && task.blocked_reason" class="mt-1 text-xs text-amber-700 dark:text-amber-300">
-                Blocked: {{ task.blocked_reason }}
-            </p>
+            <p v-if="task.status === 'blocked' && task.blocked_reason" class="text-warning mt-1 text-xs">Blocked: {{ task.blocked_reason }}</p>
         </div>
 
         <select
@@ -85,8 +84,8 @@ const destroy = () => {
         </select>
         <span v-else-if="!task.mission" class="text-muted-foreground text-sm">{{ task.assignee?.name ?? 'Unassigned' }}</span>
 
-        <span v-if="task.due_date" class="text-sm tabular-nums" :class="task.overdue ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'">
-            {{ task.due_date }}
+        <span v-if="task.due_date" class="w-14 font-mono text-xs tabular-nums" :class="task.overdue ? 'text-signal' : 'text-muted-foreground'">
+            {{ shortDate(task.due_date) }}
         </span>
 
         <StatusBadge :status="task.status" :label="task.status_label" />

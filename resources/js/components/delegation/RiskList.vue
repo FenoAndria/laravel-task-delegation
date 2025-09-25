@@ -15,8 +15,8 @@ defineProps<{
 }>();
 
 const dot: Record<RiskItem['level'], string> = {
-    high: 'bg-red-500',
-    medium: 'bg-amber-500',
+    high: 'bg-signal',
+    medium: 'bg-warning',
     low: 'bg-muted-foreground/50',
 };
 </script>

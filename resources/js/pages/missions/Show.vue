@@ -12,6 +12,7 @@ import TaskRow, { type TaskItem } from '@/components/tasks/TaskRow.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { shortDate } from '@/lib/time';
 import { type BreadcrumbItem } from '@/types';
 
 const props = defineProps<{
@@ -116,34 +117,38 @@ const destroy = () => {
                     <div class="flex flex-wrap items-center gap-3">
                         <StatusBadge :status="mission.status" :label="mission.status_label" />
                         <PriorityLabel :priority="mission.priority" />
-                        <span v-if="mission.overdue" class="text-xs font-medium text-red-600 dark:text-red-400">Overdue</span>
+                        <span v-if="mission.overdue" class="text-signal text-xs font-medium">Overdue</span>
                     </div>
-                    <h1 class="text-2xl font-semibold tracking-tight">{{ mission.title }}</h1>
-                    <p v-if="mission.description" class="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+                    <h1 class="font-display text-5xl leading-tight">{{ mission.title }}</h1>
+                    <p v-if="mission.description" class="text-muted-foreground max-w-2xl leading-relaxed whitespace-pre-line">
                         {{ mission.description }}
                     </p>
                 </header>
 
-                <dl class="grid gap-4 rounded-lg border p-4 text-sm sm:grid-cols-4">
+                <dl class="grid grid-cols-2 gap-6 border-y py-4 text-sm sm:grid-cols-4">
                     <div>
-                        <dt class="text-muted-foreground">Team</dt>
+                        <dt class="eyebrow">Team</dt>
                         <dd class="mt-1 font-medium">
                             <Link :href="route('teams.show', mission.team.id)" class="hover:underline">{{ mission.team.name }}</Link>
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Lead</dt>
+                        <dt class="eyebrow">Lead</dt>
                         <dd class="mt-1 font-medium">{{ mission.lead?.name ?? 'No lead yet' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Due</dt>
-                        <dd class="mt-1 font-medium tabular-nums">{{ mission.due_date ?? 'No due date' }}</dd>
+                        <dt class="eyebrow">Due</dt>
+                        <dd class="mt-1 font-mono" :class="{ 'text-signal': mission.overdue }">{{ shortDate(mission.due_date) || 'No due date' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Created</dt>
-                        <dd class="mt-1 font-medium tabular-nums">
-                            {{ mission.created_at
-                            }}<span v-if="mission.creator" class="text-muted-foreground font-normal"> by {{ mission.creator.name }}</span>
+                        <dt class="eyebrow">Created</dt>
+                        <dd class="mt-1">
+                            <span class="font-mono">{{ shortDate(mission.created_at) }}</span><span
+                                v-if="mission.creator"
+                                class="text-muted-foreground"
+                            >
+                                by {{ mission.creator.name }}</span
+                            >
                         </dd>
                     </div>
                 </dl>
@@ -157,26 +162,23 @@ const destroy = () => {
                 </div>
                 <InputError :message="errors.status ?? errors.blocked_reason" />
 
-                <section
-                    v-if="risks.length"
-                    class="rounded-lg border border-amber-300/60 bg-amber-50/50 px-4 dark:border-amber-900/60 dark:bg-amber-950/20"
-                >
+                <section v-if="risks.length" class="border-signal/25 bg-signal-soft/40 rounded-lg border px-4">
                     <RiskList :risks="risks" />
                 </section>
 
                 <section class="space-y-4">
                     <div class="flex items-end justify-between gap-4">
                         <div>
-                            <h2 class="text-lg font-semibold">Tasks</h2>
+                            <h2 class="font-display text-3xl">Tasks</h2>
                             <p class="text-muted-foreground text-sm">
                                 {{ mission.progress.done }} of {{ mission.progress.total }} done
                                 <template v-if="!mission.lead">· appoint a team lead to break this mission down</template>
                             </p>
                         </div>
-                        <span class="text-sm font-medium tabular-nums">{{ progress }}%</span>
+                        <span class="font-mono text-2xl font-light tabular-nums">{{ progress }}%</span>
                     </div>
                     <div class="bg-muted h-1.5 overflow-hidden rounded-full">
-                        <div class="bg-primary h-full rounded-full transition-all" :style="{ width: `${progress}%` }" />
+                        <div class="bg-foreground h-full rounded-full transition-all" :style="{ width: `${progress}%` }" />
                     </div>
 
                     <form v-if="can.manageTasks && isActive" @submit.prevent="addTask" class="flex flex-wrap gap-2">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { router, useForm } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,11 @@ const props = defineProps<{
 
 const form = useForm({ body: '' });
 
+const VISIBLE = 8;
+const expanded = ref(false);
+const hidden = computed(() => (expanded.value ? 0 : Math.max(props.entries.length - VISIBLE, 0)));
+const visible = computed(() => props.entries.slice(hidden.value));
+
 const submit = () => {
     form.post(route('comments.store', props.missionId), {
         preserveScroll: true,
@@ -39,10 +45,14 @@ const remove = (entry: TimelineEntry) => {
 
 <template>
     <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Activity</h2>
+        <h2 class="font-display border-b pb-2 text-3xl">Activity</h2>
+
+        <button v-if="hidden" type="button" class="text-muted-foreground hover:text-foreground text-sm" @click="expanded = true">
+            Show {{ hidden }} earlier {{ hidden === 1 ? 'event' : 'events' }}
+        </button>
 
         <ol v-if="entries.length" class="space-y-3">
-            <li v-for="entry in entries" :key="entry.key">
+            <li v-for="entry in visible" :key="entry.key">
                 <div v-if="entry.kind === 'comment'" class="rounded-lg border p-3">
                     <div class="flex items-baseline gap-2 text-sm">
                         <span class="font-medium">{{ entry.actor }}</span>
