@@ -36,15 +36,15 @@ const markAllRead = () => router.post(route('notifications.read'), {}, { preserv
 
             <ul v-if="notifications.length" class="divide-y rounded-lg border">
                 <li v-for="notification in notifications" :key="notification.id">
-                    <Link :href="route('notifications.show', notification.id)" class="flex gap-3 p-4 hover:bg-accent/50">
-                        <span class="mt-1.5 size-2 shrink-0 rounded-full" :class="notification.read ? 'bg-transparent' : 'bg-primary'" />
+                    <Link :href="route('notifications.show', notification.id)" class="hover:bg-accent/50 flex gap-3 p-4">
+                        <span class="mt-1.5 size-2 shrink-0 rounded-full" :class="notification.read ? 'bg-transparent' : 'bg-signal'" />
                         <span class="min-w-0 flex-1">
                             <span class="block text-sm" :class="notification.read ? 'text-muted-foreground' : 'font-medium'">{{
                                 notification.title
                             }}</span>
-                            <span v-if="notification.body" class="mt-0.5 block truncate text-sm text-muted-foreground">{{ notification.body }}</span>
+                            <span v-if="notification.body" class="text-muted-foreground mt-0.5 block truncate text-sm">{{ notification.body }}</span>
                         </span>
-                        <time :datetime="notification.created_at ?? undefined" class="shrink-0 text-xs text-muted-foreground">
+                        <time :datetime="notification.created_at ?? undefined" class="text-muted-foreground shrink-0 text-xs">
                             {{ timeAgo(notification.created_at) }}
                         </time>
                     </Link>
@@ -53,7 +53,7 @@ const markAllRead = () => router.post(route('notifications.read'), {}, { preserv
 
             <div v-else class="rounded-lg border border-dashed p-10 text-center">
                 <p class="font-medium">You're all caught up</p>
-                <p class="mt-1 text-sm text-muted-foreground">Assignments, blockers and comments on your missions will show up here.</p>
+                <p class="text-muted-foreground mt-1 text-sm">Assignments, blockers and comments on your missions will show up here.</p>
             </div>
         </div>
     </AppLayout>

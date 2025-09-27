@@ -9,8 +9,8 @@ defineProps<Props>();
 
 <template>
     <header>
-        <h3 class="mb-0.5 text-base font-medium">{{ title }}</h3>
-        <p v-if="description" class="text-sm text-muted-foreground">
+        <h2 class="font-display mb-0.5 text-2xl leading-tight">{{ title }}</h2>
+        <p v-if="description" class="text-muted-foreground text-sm">
             {{ description }}
         </p>
     </header>

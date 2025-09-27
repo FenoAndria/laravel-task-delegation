@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils';
-import { computed } from 'vue';
-
 const props = defineProps<{
     status: string;
     label: string;
 }>();
 
-const tone: Record<string, string> = {
-    open: 'border-border text-muted-foreground',
-    in_progress: 'border-blue-300 text-blue-700 dark:border-blue-800 dark:text-blue-300',
-    blocked: 'border-amber-300 text-amber-700 dark:border-amber-800 dark:text-amber-300',
-    completed: 'border-emerald-300 text-emerald-700 dark:border-emerald-800 dark:text-emerald-300',
-    done: 'border-emerald-300 text-emerald-700 dark:border-emerald-800 dark:text-emerald-300',
-    cancelled: 'border-border text-muted-foreground line-through',
+const dot: Record<string, string> = {
+    open: 'border border-muted-foreground bg-transparent',
+    todo: 'border border-muted-foreground bg-transparent',
+    in_progress: 'bg-info',
+    blocked: 'bg-warning',
+    completed: 'bg-success',
+    done: 'bg-success',
+    cancelled: 'bg-muted-foreground/40',
 };
-
-const classes = computed(() => cn('inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium', tone[props.status] ?? tone.open));
 </script>
 
 <template>
-    <span :class="classes">{{ label }}</span>
+    <span
+        class="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium whitespace-nowrap"
+        :class="{ 'text-muted-foreground': status === 'cancelled' }"
+    >
+        <span class="size-2 rounded-full" :class="dot[props.status] ?? dot.open" aria-hidden="true" />
+        {{ label }}
+    </span>
 </template>

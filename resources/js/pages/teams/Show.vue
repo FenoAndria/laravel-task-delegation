@@ -117,7 +117,7 @@ const destroy = () => {
                     v-if="can.update"
                     :value="team.lead?.id ?? ''"
                     aria-label="Team lead"
-                    class="h-9 w-full max-w-sm rounded-md border border-input bg-background px-3 text-sm"
+                    class="border-input bg-background h-9 w-full max-w-sm rounded-md border px-3 text-sm"
                     @change="changeLead(($event.target as HTMLSelectElement).value)"
                 >
                     <option value="">No lead</option>
@@ -137,7 +137,7 @@ const destroy = () => {
                     <select
                         v-model="memberForm.user_id"
                         aria-label="Person to add"
-                        class="h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm"
+                        class="border-input bg-background h-9 min-w-0 flex-1 rounded-md border px-3 text-sm"
                     >
                         <option :value="null" disabled>Add a member of the organization…</option>
                         <option v-for="person in candidates" :key="person.id" :value="person.id">{{ person.name }}</option>
@@ -150,12 +150,12 @@ const destroy = () => {
                     <li v-for="member in team.members" :key="member.id" class="flex items-center gap-4 p-4">
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-medium">{{ member.name }}</p>
-                            <p class="truncate text-sm text-muted-foreground">{{ member.email }}</p>
+                            <p class="text-muted-foreground truncate text-sm">{{ member.email }}</p>
                         </div>
                         <Button v-if="can.manageMembers" variant="ghost" size="sm" @click="removeMember(member)">Remove</Button>
                     </li>
                 </ul>
-                <p v-else class="text-sm text-muted-foreground">No members yet.</p>
+                <p v-else class="text-muted-foreground text-sm">No members yet.</p>
             </section>
 
             <section v-if="workload.length" class="space-y-4">

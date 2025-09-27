@@ -59,11 +59,11 @@ const submit = () => {
                     v-for="team in teams"
                     :key="team.id"
                     :href="route('teams.show', team.id)"
-                    class="flex flex-col gap-2 rounded-lg border p-4 transition-colors hover:bg-accent"
+                    class="hover:bg-accent flex flex-col gap-2 rounded-lg border p-4 transition-colors"
                 >
                     <span class="font-medium">{{ team.name }}</span>
-                    <span v-if="team.description" class="line-clamp-2 text-sm text-muted-foreground">{{ team.description }}</span>
-                    <span class="mt-auto text-sm text-muted-foreground">
+                    <span v-if="team.description" class="text-muted-foreground line-clamp-2 text-sm">{{ team.description }}</span>
+                    <span class="text-muted-foreground mt-auto text-sm">
                         {{ team.lead ? `Led by ${team.lead.name}` : 'No lead yet' }} · {{ team.members_count }}
                         {{ team.members_count === 1 ? 'member' : 'members' }}
                     </span>
@@ -72,7 +72,7 @@ const submit = () => {
 
             <div v-else class="rounded-lg border border-dashed p-10 text-center">
                 <p class="font-medium">No teams yet</p>
-                <p class="mt-1 text-sm text-muted-foreground">
+                <p class="text-muted-foreground mt-1 text-sm">
                     {{ canCreate ? 'Create a first team and appoint its lead.' : 'An owner or admin of the organization will create them.' }}
                 </p>
             </div>
@@ -100,7 +100,7 @@ const submit = () => {
 
                     <div class="grid gap-2">
                         <Label for="team-lead">Lead</Label>
-                        <select id="team-lead" v-model="form.lead_id" class="h-9 rounded-md border border-input bg-background px-3 text-sm">
+                        <select id="team-lead" v-model="form.lead_id" class="border-input bg-background h-9 rounded-md border px-3 text-sm">
                             <option :value="null">Appoint later</option>
                             <option v-for="person in people" :key="person.id" :value="person.id">{{ person.name }}</option>
                         </select>

@@ -12,6 +12,7 @@ import TaskRow, { type TaskItem } from '@/components/tasks/TaskRow.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { shortDate } from '@/lib/time';
 import { type BreadcrumbItem } from '@/types';
 
 const props = defineProps<{
@@ -116,34 +117,38 @@ const destroy = () => {
                     <div class="flex flex-wrap items-center gap-3">
                         <StatusBadge :status="mission.status" :label="mission.status_label" />
                         <PriorityLabel :priority="mission.priority" />
-                        <span v-if="mission.overdue" class="text-xs font-medium text-red-600 dark:text-red-400">Overdue</span>
+                        <span v-if="mission.overdue" class="text-signal text-xs font-medium">Overdue</span>
                     </div>
-                    <h1 class="text-2xl font-semibold tracking-tight">{{ mission.title }}</h1>
-                    <p v-if="mission.description" class="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                    <h1 class="font-display text-5xl leading-tight">{{ mission.title }}</h1>
+                    <p v-if="mission.description" class="text-muted-foreground max-w-2xl leading-relaxed whitespace-pre-line">
                         {{ mission.description }}
                     </p>
                 </header>
 
-                <dl class="grid gap-4 rounded-lg border p-4 text-sm sm:grid-cols-4">
+                <dl class="grid grid-cols-2 gap-6 border-y py-4 text-sm sm:grid-cols-4">
                     <div>
-                        <dt class="text-muted-foreground">Team</dt>
+                        <dt class="eyebrow">Team</dt>
                         <dd class="mt-1 font-medium">
                             <Link :href="route('teams.show', mission.team.id)" class="hover:underline">{{ mission.team.name }}</Link>
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Lead</dt>
+                        <dt class="eyebrow">Lead</dt>
                         <dd class="mt-1 font-medium">{{ mission.lead?.name ?? 'No lead yet' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Due</dt>
-                        <dd class="mt-1 font-medium tabular-nums">{{ mission.due_date ?? 'No due date' }}</dd>
+                        <dt class="eyebrow">Due</dt>
+                        <dd class="mt-1 font-mono" :class="{ 'text-signal': mission.overdue }">{{ shortDate(mission.due_date) || 'No due date' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Created</dt>
-                        <dd class="mt-1 font-medium tabular-nums">
-                            {{ mission.created_at
-                            }}<span v-if="mission.creator" class="font-normal text-muted-foreground"> by {{ mission.creator.name }}</span>
+                        <dt class="eyebrow">Created</dt>
+                        <dd class="mt-1">
+                            <span class="font-mono">{{ shortDate(mission.created_at) }}</span><span
+                                v-if="mission.creator"
+                                class="text-muted-foreground"
+                            >
+                                by {{ mission.creator.name }}</span
+                            >
                         </dd>
                     </div>
                 </dl>
@@ -157,26 +162,23 @@ const destroy = () => {
                 </div>
                 <InputError :message="errors.status ?? errors.blocked_reason" />
 
-                <section
-                    v-if="risks.length"
-                    class="rounded-lg border border-amber-300/60 bg-amber-50/50 px-4 dark:border-amber-900/60 dark:bg-amber-950/20"
-                >
+                <section v-if="risks.length" class="border-signal/25 bg-signal-soft/40 rounded-lg border px-4">
                     <RiskList :risks="risks" />
                 </section>
 
                 <section class="space-y-4">
                     <div class="flex items-end justify-between gap-4">
                         <div>
-                            <h2 class="text-lg font-semibold">Tasks</h2>
-                            <p class="text-sm text-muted-foreground">
+                            <h2 class="font-display text-3xl">Tasks</h2>
+                            <p class="text-muted-foreground text-sm">
                                 {{ mission.progress.done }} of {{ mission.progress.total }} done
                                 <template v-if="!mission.lead">· appoint a team lead to break this mission down</template>
                             </p>
                         </div>
-                        <span class="text-sm font-medium tabular-nums">{{ progress }}%</span>
+                        <span class="font-mono text-2xl font-light tabular-nums">{{ progress }}%</span>
                     </div>
-                    <div class="h-1.5 overflow-hidden rounded-full bg-muted">
-                        <div class="h-full rounded-full bg-primary transition-all" :style="{ width: `${progress}%` }" />
+                    <div class="bg-muted h-1.5 overflow-hidden rounded-full">
+                        <div class="bg-foreground h-full rounded-full transition-all" :style="{ width: `${progress}%` }" />
                     </div>
 
                     <form v-if="can.manageTasks && isActive" @submit.prevent="addTask" class="flex flex-wrap gap-2">
@@ -184,7 +186,7 @@ const destroy = () => {
                         <select
                             v-model="taskForm.assignee_id"
                             aria-label="Assignee"
-                            class="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                            class="border-input bg-background h-9 rounded-md border px-3 text-sm"
                         >
                             <option :value="null">Unassigned</option>
                             <option v-for="person in assignees" :key="person.id" :value="person.id">{{ person.name }}</option>
@@ -199,7 +201,7 @@ const destroy = () => {
                             :key="suggestion.user.id"
                             type="button"
                             :title="suggestion.reason"
-                            class="rounded-full border px-3 py-1 hover:bg-accent"
+                            class="hover:bg-accent rounded-full border px-3 py-1"
                             :class="{ 'border-primary bg-accent': taskForm.assignee_id === suggestion.user.id }"
                             @click="taskForm.assignee_id = suggestion.user.id"
                         >
@@ -212,7 +214,7 @@ const destroy = () => {
                     <ul v-if="tasks.length" class="divide-y rounded-lg border">
                         <TaskRow v-for="task in tasks" :key="task.id" :task="task" :assignees="assignees" :can-manage="can.manageTasks" />
                     </ul>
-                    <p v-else class="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+                    <p v-else class="text-muted-foreground rounded-lg border border-dashed p-6 text-center text-sm">
                         No tasks yet. The team lead breaks the mission down into tasks and assigns them.
                     </p>
                 </section>

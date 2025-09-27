@@ -34,6 +34,7 @@ class TimelinePresenter
             ->map(fn (Activity $activity) => [
                 'key' => "activity-{$activity->id}",
                 'kind' => 'activity',
+                'id' => $activity->id,
                 'type' => $activity->type->value,
                 'actor' => $activity->actor->name ?? 'Someone',
                 'body' => $activity->description(),
@@ -41,7 +42,8 @@ class TimelinePresenter
             ]);
 
         return $comments->toBase()->merge($activities)
-            ->sortBy('created_at')
+            // Same-second events keep the order they happened in.
+            ->sortBy(fn (array $entry) => $entry['created_at'].sprintf('%012d', $entry['id']))
             ->take(-self::LIMIT)
             ->values()
             ->all();

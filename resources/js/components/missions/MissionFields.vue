@@ -35,7 +35,7 @@ defineProps<{
             v-model="form.description"
             rows="4"
             placeholder="Context, expected outcome, constraints…"
-            class="rounded-md border border-input bg-background px-3 py-2 text-sm"
+            class="border-input bg-background rounded-md border px-3 py-2 text-sm"
         />
         <InputError :message="form.errors.description" />
     </div>
@@ -43,7 +43,7 @@ defineProps<{
     <div class="grid gap-4 sm:grid-cols-3">
         <div class="grid gap-2">
             <Label for="mission-team">Team</Label>
-            <select id="mission-team" v-model="form.team_id" required class="h-9 rounded-md border border-input bg-background px-3 text-sm">
+            <select id="mission-team" v-model="form.team_id" required class="border-input bg-background h-9 rounded-md border px-3 text-sm">
                 <option :value="null" disabled>Choose a team</option>
                 <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
             </select>
@@ -52,7 +52,7 @@ defineProps<{
 
         <div class="grid gap-2">
             <Label for="mission-priority">Priority</Label>
-            <select id="mission-priority" v-model="form.priority" class="h-9 rounded-md border border-input bg-background px-3 text-sm">
+            <select id="mission-priority" v-model="form.priority" class="border-input bg-background h-9 rounded-md border px-3 text-sm">
                 <option v-for="priority in priorities" :key="priority.value" :value="priority.value">{{ priority.label }}</option>
             </select>
             <InputError :message="form.errors.priority" />

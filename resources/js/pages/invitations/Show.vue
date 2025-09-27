@@ -45,7 +45,7 @@ const description = computed(() =>
         <Head :title="title" />
 
         <div class="flex flex-col gap-4">
-            <p v-if="invitation.state !== 'pending'" class="text-center text-sm text-muted-foreground">
+            <p v-if="invitation.state !== 'pending'" class="text-muted-foreground text-center text-sm">
                 {{ closedMessages[invitation.state] }}
             </p>
 
@@ -54,7 +54,7 @@ const description = computed(() =>
                     <Link v-if="hasAccount" :href="route('login')">Log in to accept</Link>
                     <Link v-else :href="route('register', { email: invitation.email })">Create an account to accept</Link>
                 </Button>
-                <p class="text-center text-sm text-muted-foreground">
+                <p class="text-muted-foreground text-center text-sm">
                     <TextLink v-if="hasAccount" :href="route('register', { email: invitation.email })">Create an account instead</TextLink>
                     <TextLink v-else :href="route('login')">I already have an account</TextLink>
                 </p>
@@ -69,7 +69,7 @@ const description = computed(() =>
                 </Button>
             </template>
 
-            <p v-else class="text-center text-sm text-muted-foreground">
+            <p v-else class="text-muted-foreground text-center text-sm">
                 This invitation was sent to <strong>{{ invitation.email }}</strong>. Log in with that address to answer it.
             </p>
 

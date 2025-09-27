@@ -47,7 +47,7 @@ const submit = () => {
                         <Label for="name">Name</Label>
                         <Input id="name" class="mt-1 block w-full" v-model="form.name" required :disabled="!canUpdate" />
                         <InputError class="mt-2" :message="form.errors.name" />
-                        <p v-if="!canUpdate" class="text-sm text-muted-foreground">Only owners and admins can rename the organization.</p>
+                        <p v-if="!canUpdate" class="text-muted-foreground text-sm">Only owners and admins can rename the organization.</p>
                     </div>
 
                     <div v-if="canUpdate" class="flex items-center gap-4">
@@ -60,7 +60,7 @@ const submit = () => {
                             leave="transition ease-in-out"
                             leave-to="opacity-0"
                         >
-                            <p class="text-sm text-neutral-600">Saved.</p>
+                            <p class="text-muted-foreground text-sm">Saved.</p>
                         </TransitionRoot>
                     </div>
                 </form>
