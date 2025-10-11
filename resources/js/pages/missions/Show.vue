@@ -2,8 +2,9 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
-import InputError from '@/components/InputError.vue';
 import RiskList, { type RiskItem } from '@/components/delegation/RiskList.vue';
+import InputError from '@/components/InputError.vue';
+import BreakdownPanel from '@/components/missions/BreakdownPanel.vue';
 import MissionFields, { type MissionFormData } from '@/components/missions/MissionFields.vue';
 import MissionTimeline, { type TimelineEntry } from '@/components/missions/MissionTimeline.vue';
 import PriorityLabel from '@/components/missions/PriorityLabel.vue';
@@ -40,7 +41,7 @@ const props = defineProps<{
     assignees: { id: number; name: string }[];
     teams: { id: number; name: string }[];
     priorities: { value: string; label: string }[];
-    can: { update: boolean; delete: boolean; complete: boolean; manageTasks: boolean };
+    can: { update: boolean; delete: boolean; complete: boolean; manageTasks: boolean; breakdown: boolean };
 }>();
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
@@ -180,6 +181,8 @@ const destroy = () => {
                     <div class="bg-muted h-1.5 overflow-hidden rounded-full">
                         <div class="bg-foreground h-full rounded-full transition-all" :style="{ width: `${progress}%` }" />
                     </div>
+
+                    <BreakdownPanel v-if="can.breakdown" :mission-id="mission.id" />
 
                     <form v-if="can.manageTasks && isActive" @submit.prevent="addTask" class="flex flex-wrap gap-2">
                         <Input v-model="taskForm.title" required placeholder="Add a task…" class="min-w-0 flex-1" aria-label="Task title" />
