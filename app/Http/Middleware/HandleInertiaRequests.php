@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'demo' => (bool) config('delego.demo'),
+            'flash' => fn () => ['breakdown' => $request->session()->get('breakdown')],
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'unreadNotifications' => fn () => $this->unreadNotifications($request),
             'auth' => [

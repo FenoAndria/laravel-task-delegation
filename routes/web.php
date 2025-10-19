@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CurrentOrganizationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\MissionBreakdownController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\MissionStatusController;
 use App\Http\Controllers\MyTaskController;
@@ -37,6 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('missions/{mission}/complete', [MissionStatusController::class, 'complete'])->name('missions.complete');
         Route::post('missions/{mission}/comments', [CommentController::class, 'store'])->name('comments.store');
         Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+        Route::post('missions/{mission}/breakdown', [MissionBreakdownController::class, 'propose'])->name('missions.breakdown');
+        Route::post('missions/{mission}/breakdown/accept', [MissionBreakdownController::class, 'accept'])->name('missions.breakdown.accept');
         Route::post('missions/{mission}/tasks', [TaskController::class, 'store'])->name('tasks.store');
         Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
         Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');

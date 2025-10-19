@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Missions\CompleteMission;
+use App\Delegation\Ai\MissionBreakdown;
 use App\Delegation\AssigneeSuggester;
 use App\Delegation\RiskDetector;
 use App\Enums\ActivityType;
@@ -111,6 +112,7 @@ class MissionController extends Controller
                 'delete' => $user->can('delete', $mission),
                 'complete' => $user->can('complete', $mission) && CompleteMission::canComplete($mission),
                 'manageTasks' => $user->can('manage', [Task::class, $mission]),
+                'breakdown' => MissionBreakdown::availableFor($mission, $user->can('manage', [Task::class, $mission])),
             ],
         ]);
     }

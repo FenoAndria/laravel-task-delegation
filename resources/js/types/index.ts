@@ -37,6 +37,9 @@ export interface NavItem {
 export interface SharedData {
     name: string;
     demo: boolean;
+    flash: {
+        breakdown: { mission_id: number; tasks: { title: string; estimate_hours: number | null }[] } | null;
+    };
     quote: { message: string; author: string };
     auth: Auth;
     unreadNotifications: number;
