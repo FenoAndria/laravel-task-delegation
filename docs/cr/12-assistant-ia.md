@@ -36,3 +36,11 @@ Aider le lead au moment le plus coûteux de la délégation, **transformer une m
 - Les tâches proposées ne sont pas assignées : l'assignation reste au lead, aidé par les suggestions de charge.
 - Pas encore de génération de résumé de mission ni de rapport hebdomadaire.
 - **Prochaine étape** : README vitrine et mise en ligne.
+
+## Mise à jour — modèles de secours (25 octobre 2025)
+
+Premier essai avec le vrai fournisseur : les modèles gratuits les plus demandés répondent souvent **429 (saturé)**, alors que d'autres modèles gratuits restent disponibles et donnent de bons découpages en 3 à 10 secondes.
+
+- `DELEGO_AI_MODEL` accepte désormais **une liste de modèles séparés par des virgules** ; en cas de saturation (429) ou d'erreur du fournisseur (5xx), le client passe au suivant.
+- Une clé refusée (401) ou une requête invalide ne déclenche pas de bascule : le problème serait le même avec tous les modèles.
+- 2 nouveaux tests (166 au total). Vérifié en conditions réelles : premier modèle saturé, bascule automatique, proposition obtenue en 8 secondes.

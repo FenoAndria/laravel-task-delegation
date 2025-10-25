@@ -30,23 +30,55 @@ class ChatClient
             throw new AssistantUnavailable('The AI assistant is not configured.');
         }
 
-        try {
-            $response = Http::baseUrl((string) config('delego.ai.base_url'))
-                ->withToken((string) config('delego.ai.api_key'))
-                ->timeout((int) config('delego.ai.timeout'))
-                ->acceptJson()
-                ->post('/chat/completions', [
-                    'model' => config('delego.ai.model'),
-                    'messages' => $messages,
-                    'temperature' => 0.3,
-                    'response_format' => ['type' => 'json_object'],
-                ])
-                ->throw();
-        } catch (ConnectionException|RequestException $exception) {
-            throw new AssistantUnavailable('The AI assistant did not answer.', previous: $exception);
+        $failure = null;
+
+        // Free models get saturated: on a rate limit or provider error, try the next one.
+        foreach (self::models() as $model) {
+            try {
+                $response = Http::baseUrl((string) config('delego.ai.base_url'))
+                    ->withToken((string) config('delego.ai.api_key'))
+                    ->timeout((int) config('delego.ai.timeout'))
+                    ->acceptJson()
+                    ->post('/chat/completions', [
+                        'model' => $model,
+                        'messages' => $messages,
+                        'temperature' => 0.3,
+                        'response_format' => ['type' => 'json_object'],
+                    ])
+                    ->throw();
+
+                return $this->decode((string) $response->json('choices.0.message.content', ''));
+            } catch (ConnectionException $exception) {
+                $failure = $exception;
+            } catch (RequestException $exception) {
+                $failure = $exception;
+
+                if ($exception->response->status() !== 429 && ! $exception->response->serverError()) {
+                    break;
+                }
+            }
         }
 
-        $content = (string) $response->json('choices.0.message.content', '');
+        throw new AssistantUnavailable('The AI assistant did not answer.', previous: $failure);
+    }
+
+    /**
+     * Models to try in order, from a comma-separated DELEGO_AI_MODEL.
+     *
+     * @return list<string>
+     */
+    public static function models(): array
+    {
+        return array_values(array_filter(array_map('trim', explode(',', (string) config('delego.ai.model')))));
+    }
+
+    /**
+     * @return array<string, mixed>
+     *
+     * @throws AssistantUnavailable
+     */
+    private function decode(string $content): array
+    {
 
         // Some models wrap JSON in prose or code fences: keep the outermost object.
         $start = strpos($content, '{');
