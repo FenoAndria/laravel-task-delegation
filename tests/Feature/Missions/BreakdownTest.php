@@ -139,3 +139,27 @@ test('missions of another organization are out of reach', function () {
     $this->actingAs($this->lead)->post(route('missions.breakdown', $foreign))->assertNotFound();
     expect(Task::count())->toBe(0);
 });
+
+test('a saturated model hands over to the next one', function () {
+    config(['delego.ai.model' => 'busy-model, spare-model']);
+    Http::fake(fn ($request) => $request['model'] === 'busy-model'
+        ? Http::response(['error' => 'rate limited'], 429)
+        : Http::response(['choices' => [['message' => ['content' => '{"tasks": [{"title": "From the spare", "estimate_hours": 2}]}']]]]));
+
+    $this->actingAs($this->lead)
+        ->post(route('missions.breakdown', $this->mission))
+        ->assertSessionHas('breakdown.tasks.0.title', 'From the spare');
+
+    Http::assertSentCount(2);
+});
+
+test('a rejected key does not try every model', function () {
+    config(['delego.ai.model' => 'first-model,second-model']);
+    Http::fake(['ai.test/*' => Http::response(['error' => 'invalid key'], 401)]);
+
+    $this->actingAs($this->lead)
+        ->post(route('missions.breakdown', $this->mission))
+        ->assertSessionHasErrors('breakdown');
+
+    Http::assertSentCount(1);
+});
