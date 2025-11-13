@@ -43,6 +43,9 @@ class DemoSeeder extends Seeder
 
     public function run(): void
     {
+        // Replaying months of history: nobody is listening, so nothing is broadcast.
+        config(['broadcasting.default' => 'null', 'queue.default' => 'sync']);
+
         $this->organization = Organization::create(['name' => 'Halcyon Studio']);
 
         $this->person('maya', 'Maya Chen', OrganizationRole::Owner);
