@@ -12,9 +12,10 @@ import StatusBadge from '@/components/missions/StatusBadge.vue';
 import TaskRow, { type TaskItem } from '@/components/tasks/TaskRow.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLiveMission } from '@/composables/useLiveMission';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { shortDate } from '@/lib/time';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type SharedData } from '@/types';
 
 const props = defineProps<{
     mission: {
@@ -49,7 +50,10 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { title: props.mission.title, href: `/missions/${props.mission.id}` },
 ]);
 
-const page = usePage();
+const page = usePage<SharedData>();
+
+const { viewers } = useLiveMission(props.mission.id, ['mission', 'tasks', 'timeline', 'risks', 'suggestions', 'can']);
+const others = computed(() => viewers.value.filter((viewer) => viewer.id !== page.props.auth.user.id));
 const errors = computed(() => page.props.errors as Record<string, string>);
 const progress = computed(() => (props.mission.progress.total ? Math.round((props.mission.progress.done / props.mission.progress.total) * 100) : 0));
 const isActive = computed(() => ['open', 'in_progress'].includes(props.mission.status));
@@ -119,6 +123,10 @@ const destroy = () => {
                         <StatusBadge :status="mission.status" :label="mission.status_label" />
                         <PriorityLabel :priority="mission.priority" />
                         <span v-if="mission.overdue" class="text-signal text-xs font-medium">Overdue</span>
+                        <span v-if="others.length" class="text-muted-foreground ml-auto flex items-center gap-2 text-xs">
+                            <span class="bg-success size-1.5 animate-pulse rounded-full" aria-hidden="true" />
+                            {{ others.map((viewer) => viewer.name.split(' ')[0]).join(', ') }} {{ others.length === 1 ? 'is' : 'are' }} here too
+                        </span>
                     </div>
                     <h1 class="font-display text-5xl leading-tight">{{ mission.title }}</h1>
                     <p v-if="mission.description" class="text-muted-foreground max-w-2xl leading-relaxed whitespace-pre-line">
