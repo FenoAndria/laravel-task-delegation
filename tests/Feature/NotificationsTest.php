@@ -41,7 +41,7 @@ describe('who gets notified', function () {
             'title' => 'Launch', 'team_id' => $this->team->id, 'priority' => 'high',
         ]);
 
-        Notification::assertSentTo($this->lead, MissionEntrusted::class, fn ($notification, $channels) => $channels === ['database', 'mail']);
+        Notification::assertSentTo($this->lead, MissionEntrusted::class, fn ($notification, $channels) => $channels === ['database', 'broadcast', 'mail']);
         Notification::assertNotSentTo($this->admin, MissionEntrusted::class);
     });
 
