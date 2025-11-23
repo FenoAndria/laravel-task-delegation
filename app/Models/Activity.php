@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActivityType;
+use App\Events\MissionChanged;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -37,6 +38,11 @@ class Activity extends Model
             'type' => ActivityType::class,
             'properties' => 'array',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::created(fn (Activity $model) => MissionChanged::dispatch($model->mission_id));
     }
 
     /**

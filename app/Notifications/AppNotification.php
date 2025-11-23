@@ -29,7 +29,7 @@ abstract class AppNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return $this->mail ? ['database', 'mail'] : ['database'];
+        return $this->mail ? ['database', 'broadcast', 'mail'] : ['database', 'broadcast'];
     }
 
     /**

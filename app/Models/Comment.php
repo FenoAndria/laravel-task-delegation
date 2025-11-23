@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\MissionChanged;
 use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,12 @@ class Comment extends Model
         'user_id',
         'body',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(fn (Comment $model) => MissionChanged::dispatch($model->mission_id));
+        static::deleted(fn (Comment $model) => MissionChanged::dispatch($model->mission_id));
+    }
 
     /**
      * @return BelongsTo<User, $this>
