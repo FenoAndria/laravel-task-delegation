@@ -16,7 +16,7 @@ class DemoLoginController extends Controller
      */
     public function store(Request $request, string $persona): RedirectResponse
     {
-        abort_unless(config('delego.demo') && isset(DemoSeeder::PERSONAS[$persona]), 404);
+        abort_unless(config('delegation.demo') && isset(DemoSeeder::PERSONAS[$persona]), 404);
 
         $user = User::where('email', DemoSeeder::PERSONAS[$persona])->firstOrFail();
 

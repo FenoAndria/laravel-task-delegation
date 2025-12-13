@@ -55,7 +55,7 @@ class RiskDetector
 
         if ($mission->isOverdue()) {
             $risks[] = $this->risk('high', 'mission_overdue', "\"{$mission->title}\" is overdue", "Was due {$mission->due_date?->toFormattedDayDateString()} · {$progress}", $url);
-        } elseif ($mission->due_date !== null && $mission->due_date->lte(today()->addDays((int) config('delego.risks.due_soon_days')))) {
+        } elseif ($mission->due_date !== null && $mission->due_date->lte(today()->addDays((int) config('delegation.risks.due_soon_days')))) {
             $total = $tasks->count();
 
             if ($total === 0 || $done / $total < 0.75) {
@@ -69,7 +69,7 @@ class RiskDetector
             $risks[] = $this->risk('medium', 'mission_without_lead', "\"{$mission->title}\" has no lead", "Appoint a lead for {$mission->team->name} to break it down", $url);
         }
 
-        $blockedSince = now()->subDays((int) config('delego.risks.blocked_for_days'));
+        $blockedSince = now()->subDays((int) config('delegation.risks.blocked_for_days'));
 
         foreach ($tasks as $task) {
             /** @var Task $task */
@@ -83,7 +83,7 @@ class RiskDetector
         }
 
         $unassigned = $tasks->filter(fn (Task $task) => $task->status->isOpen() && $task->assignee_id === null)->count();
-        $dueWithin = today()->addDays((int) config('delego.risks.unassigned_due_within_days'));
+        $dueWithin = today()->addDays((int) config('delegation.risks.unassigned_due_within_days'));
 
         if ($unassigned > 0 && $mission->due_date !== null && $mission->due_date->lte($dueWithin)) {
             $label = $unassigned === 1 ? '1 task has' : "{$unassigned} tasks have";

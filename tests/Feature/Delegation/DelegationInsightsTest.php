@@ -13,7 +13,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    config(['delego.workload.weekly_capacity_hours' => 20, 'delego.workload.default_estimate_hours' => 3]);
+    config(['delegation.workload.weekly_capacity_hours' => 20, 'delegation.workload.default_estimate_hours' => 3]);
 
     $this->organization = Organization::factory()->create();
     $this->lead = User::factory()->create(['name' => 'Lea']);

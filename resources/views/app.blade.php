@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Delego') }}</title>
-        <meta name="description" content="Delego — assisted delegation for teams. Missions flow down, progress flows up.">
+        <title inertia>{{ config('app.name', 'laravel-task-delegation') }}</title>
+        <meta name="description" content="laravel-task-delegation — assisted delegation for teams. Missions flow down, progress flows up.">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <meta name="theme-color" content="#faf8f5">
 

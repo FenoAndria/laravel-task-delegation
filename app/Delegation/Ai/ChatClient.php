@@ -13,7 +13,7 @@ class ChatClient
 {
     public static function isConfigured(): bool
     {
-        return filled(config('delego.ai.api_key')) && filled(config('delego.ai.model'));
+        return filled(config('delegation.ai.api_key')) && filled(config('delegation.ai.model'));
     }
 
     /**
@@ -35,9 +35,9 @@ class ChatClient
         // Free models get saturated: on a rate limit or provider error, try the next one.
         foreach (self::models() as $model) {
             try {
-                $response = Http::baseUrl((string) config('delego.ai.base_url'))
-                    ->withToken((string) config('delego.ai.api_key'))
-                    ->timeout((int) config('delego.ai.timeout'))
+                $response = Http::baseUrl((string) config('delegation.ai.base_url'))
+                    ->withToken((string) config('delegation.ai.api_key'))
+                    ->timeout((int) config('delegation.ai.timeout'))
                     ->acceptJson()
                     ->post('/chat/completions', [
                         'model' => $model,
@@ -63,13 +63,13 @@ class ChatClient
     }
 
     /**
-     * Models to try in order, from a comma-separated DELEGO_AI_MODEL.
+     * Models to try in order, from a comma-separated DELEGATION_AI_MODEL.
      *
      * @return list<string>
      */
     public static function models(): array
     {
-        return array_values(array_filter(array_map('trim', explode(',', (string) config('delego.ai.model')))));
+        return array_values(array_filter(array_map('trim', explode(',', (string) config('delegation.ai.model')))));
     }
 
     /**

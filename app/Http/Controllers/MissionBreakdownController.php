@@ -25,7 +25,7 @@ class MissionBreakdownController extends Controller
 
         $key = "ai-breakdown:{$mission->organization_id}";
 
-        if (RateLimiter::tooManyAttempts($key, (int) config('delego.ai.max_per_hour'))) {
+        if (RateLimiter::tooManyAttempts($key, (int) config('delegation.ai.max_per_hour'))) {
             $minutes = (int) ceil(RateLimiter::availableIn($key) / 60);
             throw ValidationException::withMessages(['breakdown' => "The assistant needs a break. Try again in {$minutes} minutes."]);
         }

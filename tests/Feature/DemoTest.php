@@ -21,7 +21,7 @@ test('the demo seeder builds a living organization', function () {
 });
 
 test('every persona reaches the dashboard', function (string $persona) {
-    config(['delego.demo' => true]);
+    config(['delegation.demo' => true]);
     $this->seed(DemoSeeder::class);
 
     $this->post(route('demo.login', $persona))->assertRedirect(route('dashboard'));
@@ -31,7 +31,7 @@ test('every persona reaches the dashboard', function (string $persona) {
 })->with(array_keys(DemoSeeder::PERSONAS));
 
 test('one-click login does not exist outside demo mode', function () {
-    config(['delego.demo' => false]);
+    config(['delegation.demo' => false]);
     $this->seed(DemoSeeder::class);
 
     $this->post(route('demo.login', 'admin'))->assertNotFound();
@@ -39,13 +39,13 @@ test('one-click login does not exist outside demo mode', function () {
 });
 
 test('unknown personas are not found', function () {
-    config(['delego.demo' => true]);
+    config(['delegation.demo' => true]);
 
     $this->post(route('demo.login', 'root'))->assertNotFound();
 });
 
 test('the reset command refuses to run outside demo mode', function () {
-    config(['delego.demo' => false]);
+    config(['delegation.demo' => false]);
 
     $this->artisan('demo:reset')->assertFailed();
 });

@@ -12,8 +12,8 @@ class ResetDemo extends Command
 
     public function handle(): int
     {
-        if (! config('delego.demo')) {
-            $this->error('Demo mode is off (DELEGO_DEMO=false): refusing to wipe the database.');
+        if (! config('delegation.demo')) {
+            $this->error('Demo mode is off (DELEGATION_DEMO=false): refusing to wipe the database.');
 
             return self::FAILURE;
         }

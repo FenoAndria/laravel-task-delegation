@@ -17,7 +17,7 @@ function aiReplies(string $content): void
 }
 
 beforeEach(function () {
-    config(['delego.ai' => [
+    config(['delegation.ai' => [
         'base_url' => 'https://ai.test/v1',
         'api_key' => 'secret',
         'model' => 'free-model',
@@ -112,14 +112,14 @@ test('only people who manage the tasks can use the assistant', function () {
 });
 
 test('the assistant is off without configuration or on a closed mission', function () {
-    config(['delego.ai.api_key' => null]);
+    config(['delegation.ai.api_key' => null]);
 
     $this->actingAs($this->lead)->post(route('missions.breakdown', $this->mission))->assertSessionHasErrors('breakdown');
     $this->actingAs($this->lead)
         ->get(route('missions.show', $this->mission))
         ->assertInertia(fn (Assert $page) => $page->where('can.breakdown', false));
 
-    config(['delego.ai.api_key' => 'secret']);
+    config(['delegation.ai.api_key' => 'secret']);
     $this->mission->update(['status' => MissionStatus::Completed]);
 
     $this->actingAs($this->lead)
@@ -141,7 +141,7 @@ test('missions of another organization are out of reach', function () {
 });
 
 test('a saturated model hands over to the next one', function () {
-    config(['delego.ai.model' => 'busy-model, spare-model']);
+    config(['delegation.ai.model' => 'busy-model, spare-model']);
     Http::fake(fn ($request) => $request['model'] === 'busy-model'
         ? Http::response(['error' => 'rate limited'], 429)
         : Http::response(['choices' => [['message' => ['content' => '{"tasks": [{"title": "From the spare", "estimate_hours": 2}]}']]]]));
@@ -154,7 +154,7 @@ test('a saturated model hands over to the next one', function () {
 });
 
 test('a rejected key does not try every model', function () {
-    config(['delego.ai.model' => 'first-model,second-model']);
+    config(['delegation.ai.model' => 'first-model,second-model']);
     Http::fake(['ai.test/*' => Http::response(['error' => 'invalid key'], 401)]);
 
     $this->actingAs($this->lead)

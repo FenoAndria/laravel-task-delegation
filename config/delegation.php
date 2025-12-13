@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'demo' => (bool) env('DELEGO_DEMO', false),
+    'demo' => (bool) env('DELEGATION_DEMO', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     */
 
     'workload' => [
-        'weekly_capacity_hours' => (int) env('DELEGO_WEEKLY_CAPACITY_HOURS', 30),
+        'weekly_capacity_hours' => (int) env('DELEGATION_WEEKLY_CAPACITY_HOURS', 30),
         'default_estimate_hours' => 3,
     ],
 
@@ -54,11 +54,11 @@ return [
     */
 
     'ai' => [
-        'base_url' => rtrim((string) env('DELEGO_AI_BASE_URL', 'https://openrouter.ai/api/v1'), '/'),
-        'api_key' => env('DELEGO_AI_API_KEY'),
-        'model' => env('DELEGO_AI_MODEL'),
-        'timeout' => (int) env('DELEGO_AI_TIMEOUT', 30),
-        'max_per_hour' => (int) env('DELEGO_AI_MAX_PER_HOUR', 10),
+        'base_url' => rtrim((string) env('DELEGATION_AI_BASE_URL', 'https://openrouter.ai/api/v1'), '/'),
+        'api_key' => env('DELEGATION_AI_API_KEY'),
+        'model' => env('DELEGATION_AI_MODEL'),
+        'timeout' => (int) env('DELEGATION_AI_TIMEOUT', 30),
+        'max_per_hour' => (int) env('DELEGATION_AI_MAX_PER_HOUR', 10),
     ],
 
 ];

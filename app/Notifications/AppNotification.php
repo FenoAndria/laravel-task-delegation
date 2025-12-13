@@ -48,6 +48,6 @@ abstract class AppNotification extends Notification implements ShouldQueue
             ->subject($message['title'])
             ->line($message['title'])
             ->when($message['body'], fn (MailMessage $mail) => $mail->line((string) $message['body']))
-            ->action('Open in Delego', $message['url']);
+            ->action('Open', $message['url']);
     }
 }

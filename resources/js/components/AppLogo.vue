@@ -10,5 +10,5 @@ defineProps<Props>();
 
 <template>
     <AppLogoIcon class="text-foreground size-7 shrink-0" />
-    <span class="font-display ml-1 truncate text-2xl leading-none">Delego</span>
+    <span class="ml-1 truncate font-mono text-sm font-medium tracking-tight">laravel-task-delegation</span>
 </template>

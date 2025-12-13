@@ -28,7 +28,7 @@ class InvitationSent extends Notification implements ShouldQueue
         $inviter = $this->invitation->inviter->name ?? 'Someone';
 
         return (new MailMessage)
-            ->subject("Join {$organization} on Delego")
+            ->subject("You are invited to join {$organization}")
             ->greeting('Hello!')
             ->line("{$inviter} invited you to join **{$organization}** as {$this->invitation->role->label()}.")
             ->action('View invitation', route('invitations.show', $this->invitation->token))
