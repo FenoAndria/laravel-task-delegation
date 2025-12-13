@@ -22,7 +22,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * A believable organization to explore Delego with, dated relative to today
+ * A believable organization to explore the app with, dated relative to today
  * so the demo never looks stale.
  */
 class DemoSeeder extends Seeder
@@ -31,9 +31,9 @@ class DemoSeeder extends Seeder
      * The three people the demo lets visitors log in as.
      */
     public const PERSONAS = [
-        'admin' => 'maya@delego.test',
-        'lead' => 'tom@delego.test',
-        'member' => 'sara@delego.test',
+        'admin' => 'maya@task-delegation.test',
+        'lead' => 'tom@task-delegation.test',
+        'member' => 'sara@task-delegation.test',
     ];
 
     /** @var array<string, User> */
@@ -116,7 +116,7 @@ class DemoSeeder extends Seeder
     {
         $user = User::create([
             'name' => $name,
-            'email' => "{$key}@delego.test",
+            'email' => "{$key}@task-delegation.test",
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);

@@ -61,7 +61,7 @@ const judgment = [
         <header class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
             <Link :href="route('home')" class="flex items-center gap-2">
                 <AppLogoIcon class="text-foreground size-7" />
-                <span class="font-display text-2xl leading-none">Delego</span>
+                <span class="font-mono text-sm font-medium tracking-tight">laravel-task-delegation</span>
             </Link>
 
             <nav class="flex items-center gap-2 text-sm">
@@ -88,8 +88,8 @@ const judgment = [
                         <em class="text-signal">Progress flows up.</em>
                     </h1>
                     <p class="text-muted-foreground max-w-xl text-lg leading-relaxed">
-                        Delego follows work from the organization to the teams and the people doing it. It tells leads who has room, and everyone what
-                        is about to slip.
+                        It follows work from the organization to the teams and the people doing it. It tells leads who has room, and everyone what is
+                        about to slip.
                     </p>
                     <div class="flex flex-wrap gap-3">
                         <Link :href="route('login')" class="bg-primary text-primary-foreground rounded-md px-5 py-3 font-medium">
@@ -102,7 +102,7 @@ const judgment = [
                     <p class="text-muted-foreground text-sm">Log in as the owner, a team lead or a member. No sign-up needed.</p>
                 </div>
 
-                <figure class="bg-card space-y-6 rounded-lg border p-6" aria-label="Preview of the Delego dashboard">
+                <figure class="bg-card space-y-6 rounded-lg border p-6" aria-label="Preview of the dashboard">
                     <div>
                         <p class="eyebrow mb-1">Needs attention</p>
                         <RiskList :risks="sampleRisks" />
@@ -146,9 +146,9 @@ const judgment = [
             <div class="text-muted-foreground mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8 text-sm">
                 <span class="flex items-center gap-2">
                     <AppLogoIcon class="text-foreground size-5" />
-                    Delego — Laravel, Inertia and Vue.
+                    laravel-task-delegation — Laravel, Inertia and Vue.
                 </span>
-                <a href="https://github.com/FenoAndria/team-flow" class="hover:text-foreground">Source on GitHub</a>
+                <a href="https://github.com/FenoAndria/laravel-task-delegation" class="hover:text-foreground">Source on GitHub</a>
             </div>
         </footer>
     </div>

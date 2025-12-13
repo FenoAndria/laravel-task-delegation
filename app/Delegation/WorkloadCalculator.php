@@ -19,8 +19,8 @@ class WorkloadCalculator
      */
     public function forPeople(Organization $organization, Collection $people): Collection
     {
-        $defaultEstimate = (int) config('delego.workload.default_estimate_hours');
-        $capacity = (int) config('delego.workload.weekly_capacity_hours');
+        $defaultEstimate = (int) config('delegation.workload.default_estimate_hours');
+        $capacity = (int) config('delegation.workload.weekly_capacity_hours');
 
         $tasks = $organization->tasks()
             ->whereIn('assignee_id', $people->pluck('id'))

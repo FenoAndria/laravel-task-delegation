@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="public/favicon.svg" width="56" height="56" alt="Delego logo">
+  <img src="public/favicon.svg" width="56" height="56" alt="laravel-task-delegation logo">
 </p>
 
-<h1 align="center">Delego</h1>
+<h1 align="center">laravel-task-delegation</h1>
 
 <p align="center">
   <strong>Assisted delegation for teams.</strong><br>
@@ -18,14 +18,14 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/landing.png" alt="Delego landing page" width="900">
+  <img src="docs/screenshots/landing.png" alt="Landing page" width="900">
 </p>
 
-## Why Delego
+## Why
 
 Most task tools are flat: one board, everyone on the same level. Real organizations delegate. Someone **entrusts** an outcome to a team, a lead **breaks it down** and hands each part to the person who has room for it, and everyone needs to know **what is about to slip**.
 
-Delego is built around that chain, and it helps at each step with rules you can read, plus an optional AI assistant you can switch off.
+This app is built around that chain, and it helps at each step with rules you can read, plus an optional AI assistant you can switch off.
 
 | Owner | Lead | Member |
 |---|---|---|
@@ -55,8 +55,8 @@ Delego is built around that chain, and it helps at each step with rules you can 
 Requirements: PHP 8.3+, Composer, Node.js 22.
 
 ```bash
-git clone https://github.com/FenoAndria/team-flow.git delego
-cd delego
+git clone https://github.com/FenoAndria/laravel-task-delegation.git
+cd laravel-task-delegation
 composer install
 npm install
 
@@ -65,7 +65,7 @@ php artisan key:generate
 php artisan migrate --seed   # creates the Halcyon Studio demo organization
 ```
 
-Set `DELEGO_DEMO=true` in `.env` to get one-click login on the login page, then:
+Set `DELEGATION_DEMO=true` in `.env` to get one-click login on the login page, then:
 
 ```bash
 composer run dev   # web server, queue worker, Reverb, logs and Vite
@@ -78,8 +78,8 @@ Open <http://localhost:8000> and log in as **Maya** (owner), **Tom** (lead) or *
 | Feature | How to turn it on |
 |---|---|
 | Real-time updates | `BROADCAST_CONNECTION=reverb` and any random `REVERB_APP_ID`, `REVERB_APP_KEY`, `REVERB_APP_SECRET` |
-| AI breakdown | `DELEGO_AI_API_KEY` and `DELEGO_AI_MODEL` (a comma-separated list of fallback models is accepted) for any OpenAI-compatible API, e.g. free models on OpenRouter |
-| Weekly capacity | `DELEGO_WEEKLY_CAPACITY_HOURS` (30 by default) |
+| AI breakdown | `DELEGATION_AI_API_KEY` and `DELEGATION_AI_MODEL` (a comma-separated list of fallback models is accepted) for any OpenAI-compatible API, e.g. free models on OpenRouter |
+| Weekly capacity | `DELEGATION_WEEKLY_CAPACITY_HOURS` (30 by default) |
 
 Free AI models may keep your prompts. Demo data is fictional; use a paid key or a no-retention model for real data.
 
@@ -128,11 +128,11 @@ The *Ink & signal* design system: warm paper, ink text, hairline rules, no shado
   <img src="docs/screenshots/dashboard-dark.png" alt="Dashboard in dark mode" width="900">
 </p>
 
-## From Team Flow to Delego
+## From Team Flow to laravel-task-delegation
 
-Delego is the rewrite of **Team Flow**, a 2024 learning project (Laravel 10 REST API + Vue SPA with Vuex), kept under the [`v1-2024`](../../tree/v1-2024) tag. The rewrite kept the domain and changed almost everything else:
+`laravel-task-delegation` is the rewrite of **Team Flow**, a 2024 learning project (Laravel 10 REST API + Vue SPA with Vuex), kept under the [`v1-2024`](../../tree/v1-2024) tag. The rewrite kept the domain and changed almost everything else:
 
-| Team Flow (2024) | Delego |
+| Team Flow (2024) | laravel-task-delegation |
 |---|---|
 | One global admin, roles inferred at login | Organizations with owner / admin / member roles |
 | Polling every 2 s through a single global flag | Reverb WebSockets with presence |

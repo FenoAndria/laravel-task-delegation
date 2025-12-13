@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "fenoandria/delego",
+    "name": "fenoandria/laravel-task-delegation",
     "type": "project",
-    "description": "Delego - assisted delegation for teams: missions flow down, progress flows up.",
+    "description": "Assisted delegation for teams: missions flow down, progress flows up.",
     "keywords": [
         "laravel",
         "inertia",

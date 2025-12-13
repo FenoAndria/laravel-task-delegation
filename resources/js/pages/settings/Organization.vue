@@ -40,7 +40,7 @@ const submit = () => {
 
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
-                <HeadingSmall title="Organization" description="The name your members see across Delego" />
+                <HeadingSmall title="Organization" description="The name your members see across the app" />
 
                 <form @submit.prevent="submit" class="space-y-6">
                     <div class="grid gap-2">

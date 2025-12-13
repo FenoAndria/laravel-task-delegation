@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             ...parent::share($request),
             'name' => config('app.name'),
-            'demo' => (bool) config('delego.demo'),
+            'demo' => (bool) config('delegation.demo'),
             'flash' => fn () => ['breakdown' => $request->session()->get('breakdown')],
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'unreadNotifications' => fn () => $this->unreadNotifications($request),

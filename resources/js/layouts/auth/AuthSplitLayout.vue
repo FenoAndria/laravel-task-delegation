@@ -19,7 +19,7 @@ const chain = [
         <aside class="relative hidden flex-col justify-between bg-[#1c1a17] p-12 text-[#ede8e0] lg:flex">
             <Link :href="route('home')" class="flex items-center gap-2">
                 <AppLogoIcon class="size-8 text-[#ede8e0]" />
-                <span class="font-display text-3xl leading-none">Delego</span>
+                <span class="font-mono text-sm font-medium tracking-tight">laravel-task-delegation</span>
             </Link>
 
             <div class="max-w-md space-y-10">
@@ -43,7 +43,7 @@ const chain = [
             <div class="w-full max-w-sm space-y-8">
                 <Link :href="route('home')" class="flex items-center gap-2 lg:hidden">
                     <AppLogoIcon class="text-foreground size-7" />
-                    <span class="font-display text-2xl leading-none">Delego</span>
+                    <span class="font-mono text-sm font-medium tracking-tight">laravel-task-delegation</span>
                 </Link>
 
                 <div v-if="title || description" class="space-y-2">
